@@ -1,0 +1,15 @@
+<md-content>
+
+  <mdt-table>
+    <mdt-header-row>
+      <mdt-column align-rule="right">Id</mdt-column>
+      <mdt-column align-rule="right">Name</mdt-column>
+    </mdt-header-row>
+
+    <mdt-row ng-repeat="(siteId, siteInfo) in projectSites">
+      <mdt-cell>{{ siteId }}</mdt-cell>
+      <mdt-cell>{{ siteInfo.name }}</mdt-cell>
+    </mdt-row>
+  </mdt-table>
+
+</md-content>
