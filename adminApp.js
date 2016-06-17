@@ -36,3 +36,9 @@ app.config(function($stateProvider) {
     })
     //---end Logistics child states
 })
+
+app.config(function($mdThemingProvider) {
+  $mdThemingProvider.theme('default')
+    .primaryPalette('cyan')
+    .accentPalette('deep-orange');
+  })

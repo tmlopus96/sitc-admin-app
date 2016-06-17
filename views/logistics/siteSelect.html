@@ -1,14 +1,28 @@
+<!--Material Icons Font-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
 <md-content>
 
   <mdt-table>
     <mdt-header-row>
-      <mdt-column align-rule="right">Id</mdt-column>
-      <mdt-column align-rule="right">Name</mdt-column>
+      <mdt-column align-rule="left">Select All</mdt-column>
+      <mdt-column align-rule="left">Name</mdt-column>
+      <mdt-column align-rule="left">Project</mdt-column>
+      <mdt-column align-rule="left">Address</mdt-column>
+      <mdt-column align-rule="left">Partner Contact</mdt-column>
     </mdt-header-row>
 
     <mdt-row ng-repeat="(siteId, siteInfo) in projectSites">
-      <mdt-cell>{{ siteId }}</mdt-cell>
+      <mdt-cell html-content="true">
+        <md-checkbox md-no-ink ng-model="projectSites[siteId].isActive" ng-true-value=1 ng-false-value=0 ng-change="toggleActive(siteId)" aria-label="Site Active Toggle">
+        </md-checkbox>
+      </mdt-cell>
       <mdt-cell>{{ siteInfo.name }}</mdt-cell>
+      <mdt-cell html-content="true">
+        <md-icon class="sitc-icon-">{{ siteInfo.project }}</md-icon>
+      </mdt-cell>
+      <mdt-cell>{{ siteInfo.address }}</mdt-cell>
+      <mdt-cell>{{ siteInfo.partnerContactName }}</mdt-cell>
     </mdt-row>
   </mdt-table>
 
