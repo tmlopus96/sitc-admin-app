@@ -1,6 +1,6 @@
 <?php
   $hostname = 'localhost';
-  $database = 'sitc_workforce';
-  $username = 'sitc_admin';
-  $password = 'clark_2002_ben';
+  $database = 'sitc_workforce_temp';
+  $username = 'root';
+  $password = 'Tko-14-akM';
 ?>
