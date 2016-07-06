@@ -43,34 +43,32 @@ do {
 
     switch ($row[3]) {
       case "'Bloomfield Hills'":
-        $row[3] = "bf";
+        $row[3] = "'bf'";
         break;
       case "'Berkley HS (Berkley)'":
-        $row[3] = "brk";
+        $row[3] = "'brk'";
         break;
       case "'Birmingham Groves HS (Beverly Hills)'":
-        $row[3] = "gro";
+        $row[3] = "'gro'";
         break;
       case "'Detroit Renaissance HS (Detroit)'":
-        $row[3] = "ren";
+        $row[3] = "'ren'";
         break;
       case "'Grosse Pointe South HS (Grosse Pointe)'":
-        $row[3] = "gp";
+        $row[3] = "'gp'";
         break;
       case "'North Farmington HS (Farmington Hills)'":
-        $row[3] = "nf";
+        $row[3] = "'nf'";
         break;
       case "'Northville HS (Northville)'":
-        $row[3] = "nv";
+        $row[3] = "'nv'";
         break;
       case "'Pioneer HS (Ann Arbor)'":
-        $row[3] = "aa";
+        $row[3] = "'aa'";
         break;
       case "'Troy HS (Troy)'":
-        $row[3] = "troy";
+        $row[3] = "'troy'";
         break;
-      default:
-        $row[3] = 'aa';
 
     }
 
