@@ -39,6 +39,52 @@ do {
     ($rowRaw[7] != '') ? array_push($row, "$rowRaw[7]") : array_push($row, "0");
     ($rowRaw[8] != '') ? array_push($row, "'$rowRaw[8]'") : array_push($row, "'0'");
 
+    //echo "row 3: " . $row[3] . "\n";
+
+    switch ($row[3]) {
+      case "'Bloomfield Hills'":
+        $row[3] = "bf";
+        break;
+      case "'Berkley HS (Berkley)'":
+        $row[3] = "brk";
+        break;
+      case "'Birmingham Groves HS (Beverly Hills)'":
+        $row[3] = "gro";
+        break;
+      case "'Detroit Renaissance HS (Detroit)'":
+        $row[3] = "ren";
+        break;
+      case "'Grosse Pointe South HS (Grosse Pointe)'":
+        $row[3] = "gp";
+        break;
+      case "'North Farmington HS (Farmington Hills)'":
+        $row[3] = "nf";
+        break;
+      case "'Northville HS (Northville)'":
+        $row[3] = "nv";
+        break;
+      case "'Pioneer HS (Ann Arbor)'":
+        $row[3] = "aa";
+        break;
+      case "'Troy HS (Troy)'":
+        $row[3] = "troy";
+        break;
+      default:
+        $row[3] = 'aa';
+
+    }
+
+    switch ($row[5]) {
+      case 'I am 18, I meet the requirements and can drive if needed.':
+        $row[5] = 1;
+        break;
+      case 'My child is 17, meets the requirements and has my permission to drive if needed.':
+        $row[5] = 1;
+        break;
+      default:
+        $row[5] = 0;
+    }
+
     $rowString = implode(', ', $row);
 
     array_push($rows, "($rowString)");
