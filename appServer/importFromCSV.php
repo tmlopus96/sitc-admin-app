@@ -48,26 +48,53 @@ do {
       case "'Berkley HS (Berkley)'":
         $row[3] = "'brk'";
         break;
+      case "'Berkley HS'": //from Crew Info form
+        $row[3] = "'brk'";
+        break;
       case "'Birmingham Groves HS (Beverly Hills)'":
+        $row[3] = "'gro'";
+        break;
+      case "'Groves'": //from Crew Info form
         $row[3] = "'gro'";
         break;
       case "'Detroit Renaissance HS (Detroit)'":
         $row[3] = "'ren'";
         break;
+      case "'Renaissance'": //from Crew Info form
+        $row[3] = "'ren'";
+        break;
       case "'Grosse Pointe South HS (Grosse Pointe)'":
+        $row[3] = "'gp'";
+        break;
+      case "'Grosse Pointe'": //from Crew Info form
         $row[3] = "'gp'";
         break;
       case "'North Farmington HS (Farmington Hills)'":
         $row[3] = "'nf'";
         break;
+      case "'North Farmington'": //from Crew Info form
+        $row[3] = "'nf'";
+        break;
       case "'Northville HS (Northville)'":
+        $row[3] = "'nv'";
+        break;
+      case "'Northville HS'": //from Crew Info form
         $row[3] = "'nv'";
         break;
       case "'Pioneer HS (Ann Arbor)'":
         $row[3] = "'aa'";
         break;
+      case "'Ann Arbor'": //from Crew Info form
+        $row[3] = "'aa'";
+        break;
       case "'Troy HS (Troy)'":
         $row[3] = "'troy'";
+        break;
+      case "'Troy'": //from Crew Info form
+        $row[3] = "'troy'";
+        break;
+      case "'Straight to site'":
+        $row[3] = "'s2s'";
         break;
 
     }
@@ -77,6 +104,12 @@ do {
         $row[5] = 1;
         break;
       case 'My child is 17, meets the requirements and has my permission to drive if needed.':
+        $row[5] = 1;
+        break;
+      case 'Yes':
+        $row[5] = 1;
+        break;
+      case 'Sometimes':
         $row[5] = 1;
         break;
       default:
