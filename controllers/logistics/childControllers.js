@@ -43,7 +43,44 @@ app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRippl
 
 }])
 
-app.controller('ActiveCrewSelectionController', ['$scope', function($scope) {
+app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', function($scope, $log, getCrew) {
+  $scope.crew = []
+  $scope.selectedCrew = ''
+
+  getCrew().then(function(crew_result) {
+    $scope.crew = crew_result
+    Object.keys($scope.crew).forEach(function(personId) {
+      if ($scope.crew[personId].isOnLogistics == '1') {
+        $scope.crew[personId].isOnLogistics = 1
+        $scope.activeCrew.push(personId)
+      } else {
+        $scope.crew[personId].isOnLogistics = 0
+      }
+    })
+  })
+
+  $scope.filterSearch = function(rawQuery) {
+    var matches = []
+    var query = rawQuery.toLowerCase()
+    Object.keys($scope.crew).forEach(function(personId) {
+      if ($scope.crew[personId].firstName.toLowerCase().indexOf(query) > -1) {
+        matches.push(personId)
+      } else if ($scope.crew[personId].lastName.toLowerCase().indexOf(query) > -1 ) {
+        matches.push(personId)
+      }
+    })
+
+    return matches
+  }
+
+  $scope.testFunc = function(personId) {
+    if (typeof personId !== 'undefined') {
+      $log.log('selected ' + $scope.crew[parseInt(personId)].firstName)
+      $scope.selectedItem = ''
+      $scope.searchText = ''
+    }
+  }
+
 
 }])
 

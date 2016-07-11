@@ -27,6 +27,33 @@ app.factory('getProjectSites', ['$log', '$q', '$http', function($log, $q, $http)
 
 }])
 
+app.factory('getCrew', ['$log', '$q', '$http', function($log, $q, $http) {
+
+  return function() {
+    $log.log('getCrew ran!')
+    var defer = $q.defer()
+
+     $http({
+      url: "appServer/getCrew.php",
+      method: "GET"
+    }).then(
+      function(response) {
+        var crew = {}
+        response.data.forEach(function(currentCrew) {
+          crew[currentCrew.person_id] = currentCrew
+        })
+
+        defer.resolve(crew)
+      },
+      function(error) {
+        //TODO error handling
+      })
+
+    return defer.promise
+  }
+
+}])
+
 app.factory('toggleSiteActive', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http, $mdToast) {
   return function(mySiteId, myActiveStatus) {
 

@@ -1,0 +1,38 @@
+<!--Material Icons Font-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+<md-content>
+
+  <md-autocomplete
+    md-selected-item="selectedItem"
+    md-search-text="searchText"
+    md-items="personId in filterSearch(searchText)"
+    md-item-text="personId"
+    md-selected-item-change="testFunc(personId)">
+      <span md-highlight-text="searchText">{{crew[personId].firstName + ' ' + crew[personId].lastName}}</span>
+  </md-autocomplete>
+
+  <mdt-table>
+    <mdt-header-row>
+      <mdt-column align-rule="left">Select All</mdt-column>
+      <mdt-column align-rule="left">Name</mdt-column>
+      <mdt-column align-rule="left">Project</mdt-column>
+      <mdt-column align-rule="left">Site</mdt-column>
+      <mdt-column align-rule="left">Seatbelts</mdt-column>
+    </mdt-header-row>
+
+    <mdt-row ng-repeat="(personId, personInfo) in crew">
+      <mdt-cell html-content="true">
+        <md-checkbox md-no-ink ng-model="crew[personId].isOnLogistics" ng-true-value=1 ng-false-value=0 ng-change="toggleActive(personId)" aria-label="Site Active Toggle">
+        </md-checkbox>
+      </mdt-cell>
+      <mdt-cell>{{ personInfo.firstName + ' ' + personInfo.lastName }}</mdt-cell>
+      <mdt-cell html-content="true">
+        <md-icon class="sitc-icon-">{{ personInfo.assignedProject }}</md-icon>
+      </mdt-cell>
+      <mdt-cell>{{ personInfo.assignedSite }}</mdt-cell>
+      <mdt-cell>{{ personInfo.numSeatbelts }}</mdt-cell>
+    </mdt-row>
+  </mdt-table>
+
+</md-content>
