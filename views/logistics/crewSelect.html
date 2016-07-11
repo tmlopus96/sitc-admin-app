@@ -8,31 +8,57 @@
     md-search-text="searchText"
     md-items="personId in filterSearch(searchText)"
     md-item-text="personId"
-    md-selected-item-change="testFunc(personId)">
+    md-selected-item-change="toggleActive(personId, 1)"
+    placeholder="Add Crew Member">
       <span md-highlight-text="searchText">{{crew[personId].firstName + ' ' + crew[personId].lastName}}</span>
   </md-autocomplete>
 
-  <mdt-table>
-    <mdt-header-row>
-      <mdt-column align-rule="left">Select All</mdt-column>
-      <mdt-column align-rule="left">Name</mdt-column>
-      <mdt-column align-rule="left">Project</mdt-column>
-      <mdt-column align-rule="left">Site</mdt-column>
-      <mdt-column align-rule="left">Seatbelts</mdt-column>
-    </mdt-header-row>
+  <h2 class="primary-text-opacity">Active Crew</h2>
+  <table class="bordered">
+    <tr>
+      <th align-rule="left">Select All</th>
+      <th align-rule="left">Name</th>
+      <th align-rule="left">Project</th>
+      <th align-rule="left">Site</th>
+      <th align-rule="left">Seatbelts</th>
+    </tr>
 
-    <mdt-row ng-repeat="(personId, personInfo) in crew">
-      <mdt-cell html-content="true">
+    <tr ng-repeat="personId in activeCrew">
+      <td html-content="true">
+        <md-checkbox md-no-ink ng-model="crew[personId].isOnLogistics" ng-true-value=1 ng-false-value=0 ng-change="toggleActive(personId)" aria-label="Crew Active Toggle">
+        </md-checkbox>
+      </td>
+      <td>{{ crew[personId].firstName + ' ' + crew[personId].lastName }}</td>
+      <td html-content="true">
+        <md-icon class="sitc-icon-">{{ crew[personId].assignedProject }}</md-icon>
+      </td>
+      <td>{{ crew[personId].assignedSite }}</td>
+      <td>{{ crew[personId].numSeatbelts }}</td>
+    </tr>
+  </table>
+
+  <h2 class="primary-text-opacity" style="padding-top:25px">All Crew</h2>
+  <table>
+    <tr>
+      <th align-rule="left">Select All</th>
+      <th align-rule="left">Name</th>
+      <th align-rule="left">Project</th>
+      <th align-rule="left">Site</th>
+      <th align-rule="left">Seatbelts</th>
+    </tr>
+
+    <tr ng-repeat="(personId, personInfo) in crew">
+      <td html-content="true">
         <md-checkbox md-no-ink ng-model="crew[personId].isOnLogistics" ng-true-value=1 ng-false-value=0 ng-change="toggleActive(personId)" aria-label="Site Active Toggle">
         </md-checkbox>
-      </mdt-cell>
-      <mdt-cell>{{ personInfo.firstName + ' ' + personInfo.lastName }}</mdt-cell>
-      <mdt-cell html-content="true">
+      </td>
+      <td>{{ personInfo.firstName + ' ' + personInfo.lastName }}</td>
+      <td html-content="true">
         <md-icon class="sitc-icon-">{{ personInfo.assignedProject }}</md-icon>
-      </mdt-cell>
-      <mdt-cell>{{ personInfo.assignedSite }}</mdt-cell>
-      <mdt-cell>{{ personInfo.numSeatbelts }}</mdt-cell>
-    </mdt-row>
-  </mdt-table>
+      </td>
+      <td>{{ personInfo.assignedSite }}</td>
+      <td>{{ personInfo.numSeatbelts }}</td>
+    </tr>
+  </table>
 
 </md-content>

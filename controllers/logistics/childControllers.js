@@ -43,14 +43,14 @@ app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRippl
 
 }])
 
-app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', function($scope, $log, getCrew) {
+app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', 'updateActiveCrew', function($scope, $log, getCrew, updateActiveCrew) {
   $scope.crew = []
   $scope.selectedCrew = ''
 
   getCrew().then(function(crew_result) {
     $scope.crew = crew_result
     Object.keys($scope.crew).forEach(function(personId) {
-      if ($scope.crew[personId].isOnLogistics == '1') {
+      if ($scope.crew[personId].isOnLogistics == '1' || $scope.crew[personId.isOnLogistics == 1]) {
         $scope.crew[personId].isOnLogistics = 1
         $scope.activeCrew.push(personId)
       } else {
@@ -58,6 +58,32 @@ app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', fu
       }
     })
   })
+
+  $scope.toggleActive = function(personId, activeStatus) {
+    if (typeof personId !== 'undefined') {
+      personId = parseInt(personId)
+      if (typeof activeStatus === 'undefined') { //activeStatus has been set by checkbox and not passed as a parameter
+        activeStatus = $scope.crew[personId].isOnLogistics
+      } else { //activeStatus has been passed and isOnLogistics has not been updated
+        $scope.crew[personId].isOnLogistics = activeStatus
+      }
+      $log.log('selected ' + $scope.crew[parseInt(personId)].firstName)
+      var togglePromise = updateActiveCrew(personId, activeStatus)
+      togglePromise.then(function success() {
+        if ($scope.crew[personId].isOnLogistics) {
+        $scope.activeCrew.push(personId)
+        } else {
+          var index = $scope.activeCrew.indexOf(personId)
+          $scope.activeCrew.splice(index, 1)
+        }
+        $log.log('activeCrew: ' + $scope.activeCrew.toString())
+      }, function failure() {
+        $mdToast.show($mdToast.simple().textContent('Failed to update database. Please try again.').highlightClass('md-warn'))
+      })
+      $scope.selectedItem = ''
+      $scope.searchText = ''
+    }
+  }
 
   $scope.filterSearch = function(rawQuery) {
     var matches = []
@@ -72,16 +98,6 @@ app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', fu
 
     return matches
   }
-
-  $scope.testFunc = function(personId) {
-    if (typeof personId !== 'undefined') {
-      $log.log('selected ' + $scope.crew[parseInt(personId)].firstName)
-      $scope.selectedItem = ''
-      $scope.searchText = ''
-    }
-  }
-
-
 }])
 
 app.controller('ActiveGroupsSelectionController', ['$scope', function($scope) {

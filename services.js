@@ -68,3 +68,18 @@ app.factory('toggleSiteActive', ['$log', '$q', '$http', '$mdToast', function($lo
 
   }
 }])
+
+app.factory('updateActiveCrew', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http, $mdToast) {
+  return function(myPersonId, myActiveStatus) {
+
+    return $http({
+      url: "appServer/updateActiveCrew.php",
+      method: 'GET',
+      params: {
+        isActive: myActiveStatus,
+        personId: myPersonId
+      }
+    })
+
+  }
+}])
