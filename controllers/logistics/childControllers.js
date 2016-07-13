@@ -52,7 +52,7 @@ app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', 'u
     Object.keys($scope.crew).forEach(function(personId) {
       if ($scope.crew[personId].isOnLogistics == '1' || $scope.crew[personId.isOnLogistics == 1]) {
         $scope.crew[personId].isOnLogistics = 1
-        $scope.activeCrew.push(personId)
+        $scope.activeCrew.push(parseInt(personId))
       } else {
         $scope.crew[personId].isOnLogistics = 0
       }
@@ -70,7 +70,7 @@ app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', 'u
       $log.log('selected ' + $scope.crew[parseInt(personId)].firstName)
       var togglePromise = updateActiveCrew(personId, activeStatus)
       togglePromise.then(function success() {
-        if ($scope.crew[personId].isOnLogistics) {
+        if ($scope.crew[personId].isOnLogistics == 1) {
         $scope.activeCrew.push(personId)
         } else {
           var index = $scope.activeCrew.indexOf(personId)
