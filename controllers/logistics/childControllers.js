@@ -5,6 +5,7 @@ app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRippl
   //TEST var
   $scope.foo = ''
 
+  /*
   getProjectSites().then(function(sites_result) {
     $scope.projectSites = sites_result
     Object.keys($scope.projectSites).forEach(function(siteId) {
@@ -16,9 +17,10 @@ app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRippl
       }
     })
   })
+  */
 
   $scope.toggleActive = function(siteId) {
-    var togglePromise = toggleSiteActive(siteId, $scope.projectSites[siteId].isActive)
+    var togglePromise = updateActiveCrew(siteId, $scope.projectSites[siteId].isActive)
     togglePromise.then(function success() {
         if ($scope.projectSites[siteId].isActive) {
           $scope.activeSites.push(siteId)
@@ -31,8 +33,6 @@ app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRippl
         $mdToast.show($mdToast.simple().textContent('Failed to update database. Please try again.').highlightClass('md-warn'))
       }
     )
-
-
   }
 
   $scope.inkRipple = function(ev) {
@@ -46,10 +46,12 @@ app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRippl
 app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', 'updateActiveCrew', function($scope, $log, getCrew, updateActiveCrew) {
   $scope.crew = []
   $scope.selectedCrew = ''
+  $scope.allCrewIsShowing = false
 
   getCrew().then(function(crew_result) {
     $scope.crew = crew_result
     Object.keys($scope.crew).forEach(function(personId) {
+      $scope.crew[personId].numPassengers = parseInt($scope.crew[personId].numPassengers) //not loading into number input for some reason
       if ($scope.crew[personId].isOnLogistics == '1' || $scope.crew[personId.isOnLogistics == 1]) {
         $scope.crew[personId].isOnLogistics = 1
         $scope.activeCrew.push(parseInt(personId))
@@ -68,10 +70,20 @@ app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', 'u
         $scope.crew[personId].isOnLogistics = activeStatus
       }
       $log.log('selected ' + $scope.crew[parseInt(personId)].firstName)
-      var togglePromise = updateActiveCrew(personId, activeStatus)
+
+      //initialize assignment with permanent values
+      if (activeStatus == 1) {
+        var paramsToUpdate = {}
+        paramsToUpdate['site'] = $scope.crew[personId].assignedSite
+        paramsToUpdate['project'] = $scope.crew[personId].assignedProject
+      }
+
+      var togglePromise = updateActiveCrew(personId, activeStatus, paramsToUpdate)
       togglePromise.then(function success() {
         if ($scope.crew[personId].isOnLogistics == 1) {
-        $scope.activeCrew.push(personId)
+          $scope.activeCrew.push(personId)
+          $scope.crew[personId].assignedToSite_id = $scope.crew[personId].assignedSite
+          $scope.crew[personId].assignedToProject = $scope.crew[personId].assignedProject
         } else {
           var index = $scope.activeCrew.indexOf(personId)
           $scope.activeCrew.splice(index, 1)
@@ -83,6 +95,15 @@ app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', 'u
       $scope.selectedItem = ''
       $scope.searchText = ''
     }
+  }
+
+  $scope.updateAssignment = function(personId, paramToUpdate) {
+    $log.log('new site is: ' + paramToUpdate.site)
+    var updatePromise = updateActiveCrew(personId, 1, paramToUpdate)
+    updatePromise.then(function success() {
+    }, function failure() {
+      $mdToast.show($mdToast.simple().textContent('Failed to update database. Please try again.').highlightClass('md-warn'))
+    })
   }
 
   $scope.filterSearch = function(rawQuery) {

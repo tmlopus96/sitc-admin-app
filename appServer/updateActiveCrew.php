@@ -19,6 +19,27 @@
     array_push($updateClauses, "isOnLogistics=" . $isActive);
   }
 
+  if (isset($_GET["site"])) {
+    $site = $_GET["site"];
+    array_push($queryFields, 'assignedToSite_id');
+    array_push($queryValues, $site);
+    array_push($updateClauses, "assignedToSite_id='" . $site . "'");
+  }
+
+  if (isset($_GET["numPassengers"])) {
+    $numPassengers = $_GET["numPassengers"];
+    array_push($queryFields, 'numPassengers');
+    array_push($queryValues, $numPassengers);
+    array_push($updateClauses, "numPassengers=" . $numPassengers);
+  }
+
+  if (isset($_GET["project"])) {
+    $project = $_GET["project"];
+    array_push($queryFields, 'assignedToProject');
+    array_push($queryValues, $project);
+    array_push($updateClauses, "assignedToProject='" . $project . "'");
+  }
+
   $fieldsStr = join(', ', $queryFields);
   $valuesStr = '"' . join('", "', $queryValues) . '"';
   $updateStr = join(', ', $updateClauses);
