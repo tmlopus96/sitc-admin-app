@@ -42,7 +42,6 @@ app.factory('getCrew', ['$log', '$q', '$http', function($log, $q, $http) {
         response.data.forEach(function(currentCrew) {
           crew[currentCrew.person_id] = currentCrew
         })
-
         defer.resolve(crew)
       },
       function(error) {
