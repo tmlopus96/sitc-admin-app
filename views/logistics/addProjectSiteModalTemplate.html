@@ -1,0 +1,48 @@
+<md-dialog aria-label="Add site dialog" style="min-width:50%">
+  <md-dialog-content layout-padding>
+    <form>
+      <div layout-gt-xs="row">
+        <md-input-container flex-gt-xs>
+          <label>Site Name</label>
+          <input type="text" ng-model="site.name" />
+        </md-input-container>
+        <span flex-gt-xs="10"></span>
+        <md-input-container>
+          <label>Project</label>
+          <md-select ng-model="site.project">
+            <md-option value="paint">Paint</md-option>
+            <md-option value="plant">Plant</md-option>
+            <md-option value="play">Play</md-option>
+          </md-select>
+        </md-input-container>
+        <span flex-gt-xs="10"></span>
+      </div>
+
+      <div layout-gt-xs="column" flex="40">
+        <md-input-container>
+          <label>Street Address</label>
+          <input type="text" ng-model="site.address" />
+        </md-input-container>
+        <md-input-container>
+          <label>City</label>
+          <input type="text" ng-model="site.city"  />
+        </md-input-container>
+        <div layout="row">
+          <md-input-container>
+            <label>State</label>
+            <input type="text" ng-model="site.state" maxlength="2" />
+          </md-input-container>
+          <md-input-container>
+            <label>Zip</label>
+            <input type="text" ng-model="site.zip" maxlength="2" />
+          </md-input-container>
+        </div>
+      </div>
+
+
+    </form>
+  </md-dialog-content>
+  <md-dialog-actions>
+    <md-button ng-click="closeDialog()" class="md-primary">Close Dialog</md-button>
+  </md-dialog-actions>
+</md-dialog>

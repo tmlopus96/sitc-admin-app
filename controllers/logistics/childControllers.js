@@ -1,6 +1,6 @@
 var app = angular.module('adminApp')
 
-app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRipple', '$mdToast', 'getProjectSites', 'toggleSiteActive', function($scope, $log, $mdInkRipple, $mdToast, getProjectSites, toggleSiteActive) {
+app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRipple', '$mdToast', 'getProjectSites', 'toggleSiteActive', 'addProjectSiteModal', function($scope, $log, $mdInkRipple, $mdToast, getProjectSites, toggleSiteActive, addProjectSiteModal) {
 
   //TEST var
   $scope.foo = ''
@@ -40,6 +40,11 @@ app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRippl
     $mdInkRipple.attach($scope, row, {dimBackground: true})
   }
 
+  $scope.addNew = function() {
+    addProjectSiteModal()
+  }
+
+
 
 }])
 
@@ -69,7 +74,7 @@ app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', 'u
       } else { //activeStatus has been passed and isOnLogistics has not been updated
         $scope.crew[personId].isOnLogistics = activeStatus
       }
-      $log.log('selected ' + $scope.crew[parseInt(personId)].firstName)
+      $log.log('selected ' + $scope.crew[parseInt(personId)].firstName + ' with activeStatus: ' + $scope.crew[personId].isOnLogistics)
 
       //initialize assignment with permanent values
       if (activeStatus == 1) {
@@ -110,10 +115,12 @@ app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', 'u
     var matches = []
     var query = rawQuery.toLowerCase()
     Object.keys($scope.crew).forEach(function(personId) {
-      if ($scope.crew[personId].firstName.toLowerCase().indexOf(query) > -1) {
-        matches.push(personId)
-      } else if ($scope.crew[personId].lastName.toLowerCase().indexOf(query) > -1 ) {
-        matches.push(personId)
+      if ($scope.crew[personId].isOnLogistics == 0) {
+        if ($scope.crew[personId].firstName.toLowerCase().indexOf(query) > -1) {
+          matches.push(personId)
+        } else if ($scope.crew[personId].lastName.toLowerCase().indexOf(query) > -1 ) {
+          matches.push(personId)
+        }
       }
     })
 

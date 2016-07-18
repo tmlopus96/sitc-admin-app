@@ -3,23 +3,31 @@
 
 <md-content>
 
-    <md-autocomplete
-      md-selected-item="selectedItem"
-      md-search-text="searchText"
-      md-items="personId in filterSearch(searchText)"
-      md-item-text="personId"
-      md-selected-item-change="toggleActive(personId, 1)"
-      placeholder="Add Crew Member"
-      style="margin-top:15px;">
-        <span md-highlight-text="searchText">{{crew[personId].firstName + ' ' + crew[personId].lastName}}</span>
-    </md-autocomplete>
-
-  <md-card ng-show="allCrewIsShowing">
+  <md-card>
     <md-card-title>
-      <span class="md-headline">All Crew</span>
+      <span class="md-headline">Add Crew</span>
     </md-card-title>
     <md-card-content>
-      <table>
+      <md-autocomplete
+        md-selected-item="selectedItem"
+        md-search-text="searchText"
+        md-items="personId in filterSearch(searchText)"
+        md-no-cache="true"
+        md-item-text="personId"
+        md-selected-item-change="toggleActive(personId, 1)"
+        placeholder="Add Crew Member"
+        style="margin-top:15px;">
+          <span md-highlight-text="searchText">{{crew[personId].firstName + ' ' + crew[personId].lastName}}</span>
+      </md-autocomplete>
+
+      <div layout="row">
+        <span flex></span>
+        <md-button
+          class="md-primary" ng-click="allCrewIsShowing = !allCrewIsShowing" style="margin:auto auto">{{ (allCrewIsShowing) ? 'Hide All Crew' : 'Show All Crew'}}</md-button>
+        <span flex></span>
+      </div>
+
+      <table ng-show="allCrewIsShowing">
         <tr>
           <th align-rule="left">Select All</th>
           <th align-rule="left">Name</th>
@@ -43,13 +51,6 @@
       </table>
     </md-card-content>
   </md-card>
-
-  <div layout="row">
-    <span flex></span>
-    <md-button
-      class="md-primary" ng-click="allCrewIsShowing = !allCrewIsShowing" style="margin:auto auto">{{ (allCrewIsShowing) ? 'Hide All Crew' : 'Show All Crew'}}</md-button>
-    <span flex></span>
-  </div>
 
   <md-card>
     <md-card-title>

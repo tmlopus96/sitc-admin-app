@@ -88,3 +88,19 @@ app.factory('updateActiveCrew', ['$log', '$q', '$http', '$mdToast', function($lo
 
   }
 }])
+
+app.factory('addProjectSiteModal', ['$log', '$mdDialog', function($log, $mdDialog) {
+
+  return function () {
+
+    $mdDialog.show({
+    templateUrl: 'views/logistics/addProjectSiteModalTemplate.html',
+    clickOutsideToClose: true,
+    controller: ['$scope', '$log', function($scope, $log) {
+
+      $scope.site = {}
+
+    }]
+  })
+}
+}])
