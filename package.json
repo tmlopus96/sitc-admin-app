@@ -1,0 +1,19 @@
+{
+  "name": "sitc-admin",
+  "version": "1.0.0",
+  "description": "Workforce managament system administration app for Summer in the City",
+  "main": "adminApp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tristanlopus/sitc-admin-app.git"
+  },
+  "author": "Tristan Lopus",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tristanlopus/sitc-admin-app/issues"
+  },
+  "homepage": "https://github.com/tristanlopus/sitc-admin-app#readme"
+}

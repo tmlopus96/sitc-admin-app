@@ -1,0 +1,26 @@
+{
+  "name": "sitc-admin",
+  "description": "Workforce managament system administration app for Summer in the City",
+  "main": "adminApp.js",
+  "authors": [
+    "Tristan Lopus"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/tristanlopus/sitc-admin-app",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-material": "^1.1.3",
+    "angular-ui-router": "^0.4.2",
+    "jquery": "^3.1.1",
+    "angular-material-icons": "^0.7.1",
+    "angular-route": "^1.6.2",
+    "angular-sanitize": "^1.6.2"
+  }
+}

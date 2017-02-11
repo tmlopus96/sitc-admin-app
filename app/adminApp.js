@@ -1,4 +1,4 @@
-var app = angular.module('adminApp', ['ngMaterial', 'ui.router', 'mdDataTable'])
+var app = angular.module('adminApp', ['ngMaterial', 'ui.router']) //'mdDataTable'
 
 app.config(function($stateProvider) {
   $stateProvider
