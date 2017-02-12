@@ -34,7 +34,7 @@
           </md-input-container>
           <md-input-container>
             <label>Zip</label>
-            <input type="text" ng-model="site.zip" maxlength="2" />
+            <input type="text" ng-model="site.zip" maxlength="5" />
           </md-input-container>
         </div>
       </div>
@@ -43,6 +43,6 @@
     </form>
   </md-dialog-content>
   <md-dialog-actions>
-    <md-button ng-click="closeDialog()" class="md-primary">Close Dialog</md-button>
+    <md-button ng-click="submit()" class="md-primary">Create Site</md-button>
   </md-dialog-actions>
 </md-dialog>

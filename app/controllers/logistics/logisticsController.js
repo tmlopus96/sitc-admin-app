@@ -1,8 +1,9 @@
 var app = angular.module('adminApp')
 
 app.controller('LogisticsController', ['$scope', '$log', 'getProjectSites', function($scope, $log, getProjectSites) {
-  $scope.projectSites = {}
+  $log.log('Hello, world! LogisticsController is running!')
 
+  $scope.projectSites = {}
   $scope.activeSites = []
   $scope.activeCrew = []
   $scope.activeGroups = []
@@ -29,6 +30,4 @@ app.controller('LogisticsController', ['$scope', '$log', 'getProjectSites', func
 
     return sitesForThisProject
   }
-
-  $log.log('active play sites: ' + $scope.getSitesForProject('play'))
 }])

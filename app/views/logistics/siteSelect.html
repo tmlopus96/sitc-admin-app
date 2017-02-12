@@ -5,27 +5,33 @@
 
   <md-button class="md-primary" ng-click="addNew()">Add New Site</md-button>
 
-  <mdt-table>
-    <mdt-header-row>
-      <mdt-column align-rule="left">Select All</mdt-column>
-      <mdt-column align-rule="left">Name</mdt-column>
-      <mdt-column align-rule="left">Project</mdt-column>
-      <mdt-column align-rule="left">Address</mdt-column>
-      <mdt-column align-rule="left">Partner Contact</mdt-column>
-    </mdt-header-row>
+<md-table-container>
+  <table md-table>
+    <thead md-head>
+      <tr md-row>
+        <th md-column align-rule="left">Select All</th>
+        <th md-column align-rule="left">Name</th>
+        <th md-column align-rule="left">Project</th>
+        <th md-column align-rule="left">Address</th>
+        <th md-column align-rule="left">Partner Contact</th>
+      </tr>
+    </thead>
 
-    <mdt-row ng-repeat="(siteId, siteInfo) in projectSites">
-      <mdt-cell html-content="true">
-        <md-checkbox md-no-ink ng-model="projectSites[siteId].isActive" ng-true-value=1 ng-false-value=0 ng-change="toggleActive(siteId)" aria-label="Site Active Toggle">
-        </md-checkbox>
-      </mdt-cell>
-      <mdt-cell>{{ siteInfo.name }}</mdt-cell>
-      <mdt-cell html-content="true">
-        <md-icon class="sitc-icon-">{{ siteInfo.project }}</md-icon>
-      </mdt-cell>
-      <mdt-cell>{{ siteInfo.address }}</mdt-cell>
-      <mdt-cell>{{ siteInfo.partnerContactName }}</mdt-cell>
-    </mdt-row>
-  </mdt-table>
+    <tbody md-body>
+      <tr md-row ng-repeat="(siteId, siteInfo) in projectSites">
+        <td md-cell html-content="true">
+          <md-checkbox md-no-ink ng-model="projectSites[siteId].isActive" ng-true-value=1 ng-false-value=0 ng-change="toggleActive(siteId)" aria-label="Site Active Toggle">
+          </md-checkbox>
+        </td>
+        <td md-cell>{{ siteInfo.name }}</td>
+        <td md-cell html-content="true">
+          <md-icon class="sitc-icon-">{{ siteInfo.project }}</md-icon>
+        </td>
+        <td md-cell>{{ siteInfo.address }}</td>
+        <td md-cell>{{ siteInfo.partnerContactName }}</td>
+      </tr>
+    </tbody>
+  </table>
+</md-table-container>
 
 </md-content>

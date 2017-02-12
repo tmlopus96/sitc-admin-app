@@ -20,7 +20,7 @@ app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRippl
   */
 
   $scope.toggleActive = function(siteId) {
-    var togglePromise = updateActiveCrew(siteId, $scope.projectSites[siteId].isActive)
+    var togglePromise = toggleSiteActive(siteId, $scope.projectSites[siteId].isActive)
     togglePromise.then(function success() {
         if ($scope.projectSites[siteId].isActive) {
           $scope.activeSites.push(siteId)
@@ -54,6 +54,8 @@ app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', 'u
   $scope.allCrewIsShowing = false
 
   getCrew().then(function(crew_result) {
+    $log.log('getCrew().then() is running!')
+    $log.log(crew_result[500].firstName)
     $scope.crew = crew_result
     Object.keys($scope.crew).forEach(function(personId) {
       $scope.crew[personId].numPassengers = parseInt($scope.crew[personId].numPassengers) //not loading into number input for some reason

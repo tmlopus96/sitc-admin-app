@@ -7,7 +7,7 @@ app.factory('getProjectSites', ['$log', '$q', '$http', function($log, $q, $http)
     var defer = $q.defer()
 
      $http({
-      url: "appServer/getProjectSites.php",
+      url: "app/appServer/getProjectSites.php",
       method: "GET"
     }).then(
       function(response) {
@@ -34,12 +34,13 @@ app.factory('getCrew', ['$log', '$q', '$http', function($log, $q, $http) {
     var defer = $q.defer()
 
      $http({
-      url: "appServer/getCrew.php",
+      url: "app/appServer/getCrew.php",
       method: "GET"
     }).then(
       function(response) {
         var crew = {}
         response.data.forEach(function(currentCrew) {
+          // $log.log(currentCrew.firstName)
           crew[currentCrew.person_id] = currentCrew
         })
         defer.resolve(crew)
@@ -50,23 +51,19 @@ app.factory('getCrew', ['$log', '$q', '$http', function($log, $q, $http) {
 
     return defer.promise
   }
-
 }])
 
 app.factory('toggleSiteActive', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http, $mdToast) {
   return function(mySiteId, myActiveStatus) {
 
-
-
     return $http({
-      url: "appServer/toggleSiteActive.php",
+      url: "app/appServer/toggleSiteActive.php",
       method: 'GET',
       params: {
         isActive: myActiveStatus,
         siteId: mySiteId
       }
     })
-
   }
 }])
 
@@ -81,26 +78,10 @@ app.factory('updateActiveCrew', ['$log', '$q', '$http', '$mdToast', function($lo
     paramsToUpdate["personId"] = myPersonId
 
     return $http({
-      url: "appServer/updateActiveCrew.php",
+      url: "app/appServer/updateActiveCrew.php",
       method: 'GET',
       params: paramsToUpdate
     })
 
   }
-}])
-
-app.factory('addProjectSiteModal', ['$log', '$mdDialog', function($log, $mdDialog) {
-
-  return function () {
-
-    $mdDialog.show({
-    templateUrl: 'views/logistics/addProjectSiteModalTemplate.html',
-    clickOutsideToClose: true,
-    controller: ['$scope', '$log', function($scope, $log) {
-
-      $scope.site = {}
-
-    }]
-  })
-}
 }])
