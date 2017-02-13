@@ -30,6 +30,7 @@ app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRippl
 
 app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', 'updateActiveCrew', function($scope, $log, getCrew, updateActiveCrew) {
   $scope.crew = []
+  // $scope.activeCrew array declared in LogisticsController
   $scope.selectedCrew = ''
   $scope.allCrewIsShowing = false
 
@@ -112,7 +113,7 @@ app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', 'u
 
 app.controller('ActiveGroupsSelectionController', ['$scope','$log', 'getGroups', 'updateActiveGroup', function($scope, $log, getGroups, updateActiveGroup) {
   $scope.groups = []
-  $scope.activeGroups = []
+  // $scope.activeGroups array declared in LogisticsController
   $scope.allGroupsAreShowing = false
 
   getGroups().then(function(groups_result) {
@@ -189,6 +190,8 @@ app.controller('ActiveGroupsSelectionController', ['$scope','$log', 'getGroups',
 
 }])
 
-app.controller('VolunteerCarsAllocationController', ['$scope', function($scope) {
+app.controller('VolunteerCarsAllocationController', ['$scope', '$log', function($scope, $log) {
+
+
 
 }])

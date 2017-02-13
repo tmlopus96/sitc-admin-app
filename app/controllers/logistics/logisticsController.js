@@ -1,9 +1,10 @@
 var app = angular.module('adminApp')
 
-app.controller('LogisticsController', ['$scope', '$log', 'getProjectSites', function($scope, $log, getProjectSites) {
+app.controller('LogisticsController', ['$scope', '$log', 'getProjectSites', 'getCarpoolSites', function($scope, $log, getProjectSites, getCarpoolSites) {
   $log.log('Hello, world! LogisticsController is running!')
 
   $scope.projectSites = {}
+  $scope.carpoolSites = {}
   $scope.activeSites = []
   $scope.activeCrew = []
   $scope.activeGroups = []
@@ -20,6 +21,11 @@ app.controller('LogisticsController', ['$scope', '$log', 'getProjectSites', func
     })
   })
 
+  getCarpoolSites().then(function(sites_result) {
+    $scope.carpoolSites = sites_result
+    $log.log('$scope.carpoolSites: ' + dump($scope.carpoolSites, 'none'))
+  })
+
   $scope.getSitesForProject = function(project) {
     var sitesForThisProject = []
     $scope.activeSites.forEach(function(currentSite) {
@@ -30,4 +36,5 @@ app.controller('LogisticsController', ['$scope', '$log', 'getProjectSites', func
 
     return sitesForThisProject
   }
+
 }])
