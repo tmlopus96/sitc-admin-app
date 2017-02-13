@@ -2,23 +2,6 @@ var app = angular.module('adminApp')
 
 app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRipple', '$mdToast', 'getProjectSites', 'toggleSiteActive', 'addProjectSiteModal', function($scope, $log, $mdInkRipple, $mdToast, getProjectSites, toggleSiteActive, addProjectSiteModal) {
 
-  //TEST var
-  $scope.foo = ''
-
-  /*
-  getProjectSites().then(function(sites_result) {
-    $scope.projectSites = sites_result
-    Object.keys($scope.projectSites).forEach(function(siteId) {
-      if ($scope.projectSites[siteId].isActive == '1') {
-        $scope.projectSites[siteId].isActive = 1
-        $scope.activeSites.push(siteId)
-      } else {
-        $scope.projectSites[siteId].isActive = 0
-      }
-    })
-  })
-  */
-
   $scope.toggleActive = function(siteId) {
     var togglePromise = toggleSiteActive(siteId, $scope.projectSites[siteId].isActive)
     togglePromise.then(function success() {
@@ -43,9 +26,6 @@ app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRippl
   $scope.addNew = function() {
     addProjectSiteModal()
   }
-
-
-
 }])
 
 app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', 'updateActiveCrew', function($scope, $log, getCrew, updateActiveCrew) {
@@ -130,7 +110,82 @@ app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', 'u
   }
 }])
 
-app.controller('ActiveGroupsSelectionController', ['$scope', function($scope) {
+app.controller('ActiveGroupsSelectionController', ['$scope','$log', 'getGroups', 'updateActiveGroup', function($scope, $log, getGroups, updateActiveGroup) {
+  $scope.groups = []
+  $scope.activeGroups = []
+  $scope.allGroupsAreShowing = false
+
+  getGroups().then(function(groups_result) {
+    $log.log('getGroups().then() is running!')
+    $scope.groups = groups_result
+    Object.keys($scope.groups).forEach(function(group_id) {
+      // -- cast isActive and numVolunteers to number types; server returns string for some reason...maybe number types get stringified by PHP's json_encode?
+      $scope.groups[group_id].numVolunteers = parseInt($scope.groups[group_id].numVolunteers)
+      if ($scope.groups[group_id].isActive == '1' || $scope.groups[group_id.isActive == 1]) {
+        $scope.groups[group_id].isActive = 1
+        $scope.activeGroups.push(parseInt(group_id))
+      } else {
+        $scope.groups[group_id].isActive = 0
+      }
+    })
+    $log.log('$scope.activeGroups' + dump($scope.activeGroups, 'none'))
+  })
+
+  $scope.toggleActive = function(groupId, activeStatus) {
+    if (typeof groupId !== 'undefined') {
+      groupId = parseInt(groupId)
+      if (typeof activeStatus === 'undefined') { //activeStatus has been set by checkbox and not passed as a parameter
+        activeStatus = $scope.groups[groupId].isActive
+      } else { //activeStatus has been passed and isActive has not been updated
+        $scope.groups[groupId].isActive = activeStatus
+      }
+      // $log.log('selected ' + $scope.groups[parseInt(groupId)].firstName + ' with activeStatus: ' + $scope.groups[groupId].isActive)
+
+      var togglePromise = updateActiveGroup(groupId, activeStatus)
+      togglePromise.then(function success() {
+        if ($scope.groups[groupId].isActive == 1) {
+          $scope.activeGroups.push(groupId)
+        } else {
+          var index = $scope.activeGroups.indexOf(groupId)
+          $scope.activeGroups.splice(index, 1)
+        }
+        $log.log('activeGroups: ' + $scope.activeGroups.toString())
+      }, function failure() {
+        $mdToast.show($mdToast.simple().textContent('Failed to update database. Please try again.').highlightClass('md-warn'))
+      })
+      $scope.selectedItem = ''
+      $scope.searchText = ''
+    }
+  }
+
+  $scope.updateAssignment = function(groupId, paramToUpdate) {
+    $log.log("$scope.updateAssignment is running for group" + $scope.groups[groupId])
+    var updatePromise = updateActiveGroup(groupId, 1, paramToUpdate)
+    updatePromise.then(function success() {
+    }, function failure() {
+      $mdToast.show($mdToast.simple().textContent('Failed to update database. Please try again.').highlightClass('md-warn'))
+    })
+  }
+
+
+
+  $scope.filterSearch = function(rawQuery) {
+    /* -- implement this for groups
+    var matches = []
+    var query = rawQuery.toLowerCase()
+    Object.keys($scope.crew).forEach(function(personId) {
+      if ($scope.crew[personId].isOnLogistics == 0) {
+        if ($scope.crew[personId].firstName.toLowerCase().indexOf(query) > -1) {
+          matches.push(personId)
+        } else if ($scope.crew[personId].lastName.toLowerCase().indexOf(query) > -1 ) {
+          matches.push(personId)
+        }
+      }
+    })
+
+    return matches
+    --- */
+  }
 
 }])
 

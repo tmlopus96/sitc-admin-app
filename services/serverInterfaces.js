@@ -1,7 +1,5 @@
 var app = angular.module('adminApp')
 
-/**** Getters ***/
-
 app.factory('getProjectSites', ['$log', '$q', '$http', function($log, $q, $http) {
 
   return function() {
@@ -42,6 +40,7 @@ app.factory('getCrew', ['$log', '$q', '$http', function($log, $q, $http) {
       function(response) {
         var crew = {}
         response.data.forEach(function(currentCrew) {
+          // $log.log(currentCrew.firstName)
           crew[currentCrew.person_id] = currentCrew
         })
         defer.resolve(crew)
@@ -54,32 +53,6 @@ app.factory('getCrew', ['$log', '$q', '$http', function($log, $q, $http) {
   }
 }])
 
-app.factory('getGroups', ['$log', '$q', '$http', function($log, $q, $http) {
-
-  return function() {
-    var defer = $q.defer()
-
-    $http({
-      method: "GET",
-      url: "app/appServer/getGroups.php"
-    }).then(function mySuccess(response) {
-      var sites = {}
-      response.data.forEach(function(currentGroup) {
-        sites[currentGroup.group_id] = currentGroup
-      })
-      $log.log('site: ' + dump(sites, 'none'))
-      defer.resolve(sites)
-    },
-    function myFailure() {
-      // handle error
-    })
-
-    return defer.promise
-  }
-}])
-
-/*** Setters ***/
-
 app.factory('toggleSiteActive', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http, $mdToast) {
   return function(mySiteId, myActiveStatus) {
 
@@ -91,7 +64,6 @@ app.factory('toggleSiteActive', ['$log', '$q', '$http', '$mdToast', function($lo
         siteId: mySiteId
       }
     })
-    //TODO: handle server fail
   }
 }])
 
@@ -110,29 +82,6 @@ app.factory('updateActiveCrew', ['$log', '$q', '$http', '$mdToast', function($lo
       method: 'GET',
       params: paramsToUpdate
     })
-    // TODO: catch errors on server fail
-
-  }
-}])
-
-app.factory('updateActiveGroup', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http, $mdToast) {
-  return function(myGroupId, myActiveStatus, paramsToUpdate) {
-
-    if (!paramsToUpdate) {
-      paramsToUpdate = {}
-    }
-
-    paramsToUpdate["isActive"] = myActiveStatus
-    paramsToUpdate["groupId"] = myGroupId
-
-    $log.log("About to send request to updateActiveCrew.php with paramsToUpdate: " + dump(paramsToUpdate, 'none'))
-
-    return $http({
-      url: "app/appServer/updateActiveGroup.php",
-      method: 'GET',
-      params: paramsToUpdate
-    })
-    // TODO: catch errors on server fail
 
   }
 }])

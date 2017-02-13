@@ -1,0 +1,105 @@
+<!--Material Icons Font-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+<md-content>
+
+  <md-card>
+    <md-card-title>
+      <span class="md-headline">Add Groups</span>
+    </md-card-title>
+    <md-card-content>
+      <md-autocomplete
+        md-selected-item="selectedItem"
+        md-search-text="searchText"
+        md-items="group_id in filterSearch(searchText)"
+        md-no-cache="true"
+        md-item-text="group_id"
+        md-selected-item-change="toggleActive(group_id, 1)"
+        placeholder="Add Volunteer Group"
+        style="margin-top:15px;">
+          <span md-highlight-text="searchText">{{groups[group_id].name}}</span>
+      </md-autocomplete>
+
+      <div layout="row">
+        <span flex></span>
+        <md-button
+          class="md-primary" ng-click="allGroupsAreShowing = !allGroupsAreShowing" style="margin:auto auto">{{ (allGroupsAreShowing) ? 'Hide All Crew' : 'Show All Crew'}}</md-button>
+        <span flex></span>
+      </div>
+
+      <table ng-show="allGroupsAreShowing">
+        <tr>
+          <th align-rule="left">Select All</th>
+          <th align-rule="left">Group</th>
+          <th align-rule="left">Volunteer Count</th>
+          <th align-rule="left">Requested Project</th>
+          <th align-rule="left">Site Assignment</th>
+        </tr>
+
+        <tr ng-repeat="(groupId, groupInfo) in groups">
+          <td html-content="true">
+            <md-checkbox md-no-ink ng-model="groups[groupId].isActive" ng-true-value=1 ng-false-value=0 ng-change="toggleActive(groupId)" aria-label="Group Active Toggle">
+            </md-checkbox>
+          </td>
+          <td>{{ groupInfo.name }}</td>
+          <td>{{ groupInfo.numVolunteers }}</td>
+          <td html-content="true">
+            <md-icon class="sitc-icon-">{{ groupInfo.preferredProject }}</md-icon>
+          </td>
+          <td>{{ groupInfo.assignedToSite }}</td>
+        </tr>
+      </table>
+    </md-card-content>
+  </md-card>
+
+  <md-card>
+    <md-card-title>
+      <span class="md-headline">Active Groups</span>
+    </md-card-title>
+    <md-card-content>
+      <table class="bordered">
+        <tr>
+          <th align-rule="left">Select All</th>
+          <th align-rule="left">Group</th>
+          <th align-rule="left">Volunteer Count</th>
+          <!-- <th align-rule="left">Requested Project</th> -->
+          <th align-rule="left">Site Assignment</th>
+        </tr>
+
+        <tr ng-repeat="group_id in activeGroups">
+          <td html-content="true">
+            <md-checkbox md-no-ink ng-model="groups[group_id].isActive" ng-true-value=1 ng-false-value=0 ng-change="toggleActive(group_id)" aria-label="Group Active Toggle">
+            </md-checkbox>
+          </td>
+          <td>{{ groups[group_id].name }}</td>
+          <td>
+            <md-input-container style="height: 34px; margin-top:10px; margin-bottom:10px">
+              <input type="number" ng-model="groups[group_id].numVolunteers" ng-change="updateAssignment(group_id, {'numVolunteers':groups[group_id].numVolunteers})" min=0 style="padding:0; vertical-align: middle" />
+            </md-input-container>
+          </td>
+          <!-- <td html-content="true">
+            <md-icon class="sitc-icon-">{{ groups[group_id].assi }}</md-icon>
+            <span class="sitc-icon-">{{ groups[group_id].assi }}</span>
+          </td> -->
+          <td> <!-- assigned to site dropdown -->
+            <md-icon class="sitc-icon-">{{ projectSites[groups[group_id].assignedToSite].project }}</md-icon>
+            <md-input-container style="margin-top:10px; margin-bottom:10px">
+              <md-select ng-model="groups[group_id].assignedToSite" md-on-close="updateAssignment(group_id, {'assignedToSite':groups[group_id].assignedToSite})">
+                <md-optgroup label="Play">
+                  <md-option ng-repeat="playSite in getSitesForProject('play')" ng-value="playSite">{{ projectSites[playSite].name }}</md-option>
+                </md-optgroup>
+                <md-optgroup label="Paint">
+                  <md-option ng-repeat="paintSite in getSitesForProject('paint')" ng-value="paintSite">{{ projectSites[paintSite].name }}</md-option>
+                </md-optgroup>
+                <md-optgroup label="Plant">
+                  <md-option ng-repeat="plantSite in getSitesForProject('plant')" ng-value="plantSite">{{ projectSites[plantSite].name }}</md-option>
+                </md-optgroup>
+              </md-select>
+            </md-input-container>
+          </td>
+        </tr>
+      </table>
+    </md-card-content>
+  </md-card>
+
+</md-content>
