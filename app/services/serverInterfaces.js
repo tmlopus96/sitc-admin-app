@@ -104,6 +104,30 @@ app.factory('getGroups', ['$log', '$q', '$http', function($log, $q, $http) {
   }
 }])
 
+app.factory('getTeerCars', ['$log', '$q', '$http', function($log, $q, $http) {
+
+  return function() {
+    var defer = $q.defer()
+
+    $http({
+      method: "GET",
+      url: "app/appServer/teerCars/getTeerCars.php"
+    }).then(function mySuccess(response) {
+      var teerCars = {}
+      response.data.forEach(function(currentCar) {
+        teerCars[currentCar.teerCar_id] = currentCar
+      })
+      $log.log('site: ' + dump(teerCars, 'none'))
+      defer.resolve(teerCars)
+    },
+    function myFailure() {
+      // handle error
+    })
+
+    return defer.promise
+  }
+}])
+
 /*** Setters ***/
 
 app.factory('toggleSiteActive', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http, $mdToast) {
@@ -156,6 +180,27 @@ app.factory('updateActiveGroup', ['$log', '$q', '$http', '$mdToast', function($l
     return $http({
       url: "app/appServer/updateActiveGroup.php",
       method: 'GET',
+      params: paramsToUpdate
+    })
+    // TODO: catch errors on server fail
+
+  }
+}])
+
+app.factory('updateActiveTeerCar', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http, $mdToast) {
+  return function(myTeerCardId, paramsToUpdate) {
+
+    if (!paramsToUpdate) {
+      paramsToUpdate = {}
+    }
+
+    paramsToUpdate["teerCarId"] = myTeerCardId
+
+    $log.log("About to send request to updateActiveTeerCar.php with paramsToUpdate: " + dump(paramsToUpdate, 'none'))
+
+    return $http({
+      url: "app/appServer/teerCars/updateActiveTeerCar.php",
+      method: 'POST',
       params: paramsToUpdate
     })
     // TODO: catch errors on server fail

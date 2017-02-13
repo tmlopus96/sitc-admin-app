@@ -28,9 +28,9 @@ app.config(function($stateProvider) {
         controller: 'ActiveGroupsSelectionController',
         data: {requireLogin: true}
       })
-      .state('logistcs.volunteerCars', {
-        url: '/volunteerCars',
-        templateUrl: 'app/views/logistics/volunteerCars.html',
+      .state('logistics.volunteerCars', {
+        url: '/volunteerCarSelect',
+        templateUrl: 'app/views/logistics/volunteerCarSelect.html',
         controller: 'VolunteerCarsAllocationController',
         data: {requireLogin: true}
     })

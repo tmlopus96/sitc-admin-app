@@ -1,0 +1,51 @@
+<!--Material Icons Font-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+<md-content>
+
+  <md-button class="md-primary" ng-click="addNew()">Add New Site</md-button>
+
+<md-table-container>
+  <table md-table>
+    <thead md-head>
+      <tr md-row>
+        <th md-column align-rule="left"> </th>
+        <th md-column align-rule="left">Carpool Site</th>
+        <th md-column align-rule="left">Passengers</th>
+        <th md-column align-rule="left">Project Site</th>
+      </tr>
+    </thead>
+
+    <tbody md-body>
+      <tr md-row ng-repeat="(teerCarId, teerCarInfo) in teerCars">
+        <td md-cell>
+          <md-icon class="material-icons" style="font-size:18px !important">close</md-icon>
+        </td>
+        <td md-cell>{{ carpoolSites[teerCarInfo.carpoolSite_id].name }}</td>
+        <td md-cell>
+          <md-input-container style="height: 34px; margin-top:10px; margin-bottom:10px">
+            <input type="number" ng-model="teerCars[teerCarId].assignedNumPassengers" ng-change="updateAssignment(teerCarId, {'assignedNumPassengers':teerCars[teerCarId].assignedNumPassengers})" min=0 style="padding:0; vertical-align: middle" />
+          </md-input-container>
+        </td>
+        <td md-cell> <!-- assigned to site dropdown -->
+          <md-icon class="sitc-icon-">{{ projectSites[teerCars[teerCarId].assignedToSite].project }}</md-icon>
+          <md-input-container style="margin-top:10px; margin-bottom:10px">
+            <md-select ng-model="teerCars[teerCarId].assignedToSite" md-on-close="updateAssignment(teerCarId, {'assignedToSite':teerCars[teerCarId].assignedToSite})">
+              <md-optgroup label="Play">
+                <md-option ng-repeat="playSite in getSitesForProject('play')" ng-value="playSite">{{ projectSites[playSite].name }}</md-option>
+              </md-optgroup>
+              <md-optgroup label="Paint">
+                <md-option ng-repeat="paintSite in getSitesForProject('paint')" ng-value="paintSite">{{ projectSites[paintSite].name }}</md-option>
+              </md-optgroup>
+              <md-optgroup label="Plant">
+                <md-option ng-repeat="plantSite in getSitesForProject('plant')" ng-value="plantSite">{{ projectSites[plantSite].name }}</md-option>
+              </md-optgroup>
+            </md-select>
+          </md-input-container>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</md-table-container>
+
+</md-content>

@@ -1,0 +1,39 @@
+<md-dialog aria-label="Add site dialog" style="min-width:50%">
+  <md-dialog-content layout-padding>
+    <form>
+      <div layout-gt-xs="row">
+        <!-- <span flex-gt-xs="10"></span> -->
+        <md-input-container>
+          <label>Carpool Site</label>
+          <md-select ng-model="car.carpoolSite_id">
+            <md-option ng-repeat="site in carpoolSites" ng-value="site.carpoolSite_id">{{ site.name }}</md-option>
+          </md-select>
+        </md-input-container>
+        <span flex-gt-xs="10"></span>
+        <md-input-container>
+          <label>Passengers</label>
+          <input type="number" ng-model="car.assignedNumPassengers">
+        </md-input-container>
+        <span flex-gt-xs="10"></span>
+        <md-input-container style="margin-top:10px; margin-bottom:10px">
+          <label>Project Site</label>
+          <md-select ng-model="car.assignedToSite">
+            <md-optgroup label="Play">
+              <md-option ng-repeat="playSite in getSitesForProject('play')" ng-value="playSite">{{ projectSites[playSite].name }}</md-option>
+            </md-optgroup>
+            <md-optgroup label="Paint">
+              <md-option ng-repeat="paintSite in getSitesForProject('paint')" ng-value="paintSite">{{ projectSites[paintSite].name }}</md-option>
+            </md-optgroup>
+            <md-optgroup label="Plant">
+              <md-option ng-repeat="plantSite in getSitesForProject('plant')" ng-value="plantSite">{{ projectSites[plantSite].name }}</md-option>
+            </md-optgroup>
+          </md-select>
+        </md-input-container>
+        <span flex-gt-xs="10"></span>
+      </div>
+    </form>
+  </md-dialog-content>
+  <md-dialog-actions>
+    <md-button ng-click="submit()" class="md-primary">Create Site</md-button>
+  </md-dialog-actions>
+</md-dialog>

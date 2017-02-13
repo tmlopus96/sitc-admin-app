@@ -190,8 +190,41 @@ app.controller('ActiveGroupsSelectionController', ['$scope','$log', 'getGroups',
 
 }])
 
-app.controller('VolunteerCarsAllocationController', ['$scope', '$log', function($scope, $log) {
+app.controller('VolunteerCarsAllocationController', ['$scope', '$log', 'getTeerCars', 'updateActiveTeerCar', 'addTeerCarModal', function($scope, $log, getTeerCars, updateActiveTeerCar, addTeerCarModal) {
 
+  $log.log('VolunteerCarsAllocationController is running!')
+
+  // $scope.carpoolSites array declared in LogisticsController
+  $scope.teerCars = {}
+
+  getTeerCars().then(function(teerCars_result) {
+    $log.log('getTeerCars().then() is running!')
+    $scope.teerCars = teerCars_result
+    Object.keys($scope.teerCars).forEach(function(teerCar_id) {
+      // -- cast isActive and assignedNumPassengers to number types; server returns string for some reason...maybe number types get stringified by PHP's json_encode?
+      $scope.teerCars[teerCar_id].assignedNumPassengers = parseInt($scope.teerCars[teerCar_id].assignedNumPassengers)
+      if ($scope.teerCars[teerCar_id].isActive == '1' || $scope.teerCars[teerCar_id.isActive == 1]) {
+        $scope.teerCars[teerCar_id].isActive = 1
+        // $scope.activeGroups.push(parseInt(teerCar_id))
+      } else {
+        $scope.teerCars[teerCar_id].isActive = 0
+      }
+    })
+    $log.log('$scope.teerCars' + dump($scope.teerCars, 'none'))
+  })
+
+  $scope.updateAssignment = function(teerCarId, paramToUpdate) {
+    $log.log("$scope.updateAssignment is running for group" + $scope.teerCars[teerCarId])
+    var updatePromise = updateActiveTeerCar(teerCarId, paramToUpdate)
+    updatePromise.then(function success() {
+    }, function failure() {
+      $mdToast.show($mdToast.simple().textContent('Failed to update database. Please try again.').highlightClass('md-warn'))
+    })
+  }
+
+  $scope.addNew = function() {
+    addTeerCarModal($scope.carpoolSites, $scope.projectSites, $scope.getSitesForProject)
+  }
 
 
 }])
