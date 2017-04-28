@@ -10,6 +10,12 @@ app.config(function($stateProvider) {
     })
 
     //--- Logistics child states
+      .state('logistics.carpoolSitesPanel', {
+        url: '/carpoolPanel',
+        templateUrl: 'app/views/logistics/carpoolPanel.html',
+        controller: 'CarpoolPanelController',
+        data: {requireLogin: true}
+      })
       .state('logistics.projectSiteSelection', {
         url: '/siteSelect',
         templateUrl: 'app/views/logistics/siteSelect.html',
@@ -19,6 +25,12 @@ app.config(function($stateProvider) {
       .state('logistics.activeCrew', {
         url: '/crewSelect',
         templateUrl: 'app/views/logistics/crewSelect.html',
+        controller: 'ActiveCrewSelectionController',
+        data: {requireLogin: true}
+      })
+      .state('logistics.carpoolSites', {
+        url: '/carpoolSites',
+        templateUrl: 'app/views/logistics/carpoolSites.html', //crewSelect.html
         controller: 'ActiveCrewSelectionController',
         data: {requireLogin: true}
       })
@@ -33,7 +45,7 @@ app.config(function($stateProvider) {
         templateUrl: 'app/views/logistics/volunteerCarSelect.html',
         controller: 'VolunteerCarsAllocationController',
         data: {requireLogin: true}
-    })
+      })
     //---end Logistics child states
 })
 

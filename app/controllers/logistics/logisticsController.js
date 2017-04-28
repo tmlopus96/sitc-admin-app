@@ -1,10 +1,11 @@
 var app = angular.module('adminApp')
 
-app.controller('LogisticsController', ['$scope', '$log', 'getProjectSites', 'getCarpoolSites', function($scope, $log, getProjectSites, getCarpoolSites) {
+app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites', 'getCarpoolSites', 'getCrew', function($scope, $log, $q, getProjectSites, getCarpoolSites, getCrew) {
   $log.log('Hello, world! LogisticsController is running!')
 
-  $scope.projectSites = {}
   $scope.carpoolSites = {}
+  $scope.crew = {}
+  $scope.projectSites = {}
   $scope.activeSites = []
   $scope.activeCrew = []
   $scope.activeGroups = []
@@ -21,9 +22,15 @@ app.controller('LogisticsController', ['$scope', '$log', 'getProjectSites', 'get
     })
   })
 
+  $scope.carpoolSitesWillLoad_defer = $q.defer()
   getCarpoolSites().then(function(sites_result) {
     $scope.carpoolSites = sites_result
-    $log.log('$scope.carpoolSites: ' + dump($scope.carpoolSites, 'none'))
+    Object.keys($scope.carpoolSites).forEach(function(siteId) {
+      $scope.carpoolSites[siteId]["assignedCrew"] = []
+      $scope.carpoolSites[siteId]["assignedVans"] = []
+    })
+    // $log.log('$scope.carpoolSites: ' + dump($scope.carpoolSites, 'none'))
+    $scope.carpoolSitesWillLoad_defer.resolve()
   })
 
   $scope.getSitesForProject = function(project) {

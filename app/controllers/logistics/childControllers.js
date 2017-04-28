@@ -1,5 +1,27 @@
 var app = angular.module('adminApp')
 
+app.controller('CarpoolPanelController', ['$scope', '$log', '$mdToast', 'getProjectSites', 'getCrew', function($scope, $log, $mdToast, getProjectSites, getCrew) {
+
+  $scope.carpoolSitesWillLoad_defer.promise.then(function() {
+
+    getCrew().then(function(crew_result) {
+      $scope.crew = crew_result
+      Object.keys($scope.crew).forEach(function(personId) {
+        $scope.crew[personId].numPassengers = parseInt($scope.crew[personId].numPassengers) //not loading into number input for some reason
+        if ($scope.crew[personId].isOnLogistics == '1' || $scope.crew[personId.isOnLogistics == 1]) {
+          $scope.crew[personId].isOnLogistics = 1
+          $scope.activeCrew.push(parseInt(personId))
+          $scope.carpoolSites[$scope.crew[personId].primaryCarpool_id].assignedCrew.push(personId)
+        } else {
+          $scope.crew[personId].isOnLogistics = 0
+        }
+      })
+      $log.log('$scope.carpoolSites: ' + dump($scope.carpoolSites, 'none'))
+    })
+  })
+
+}])
+
 app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRipple', '$mdToast', 'getProjectSites', 'toggleSiteActive', 'addProjectSiteModal', function($scope, $log, $mdInkRipple, $mdToast, getProjectSites, toggleSiteActive, addProjectSiteModal) {
 
   $scope.toggleActive = function(siteId) {
@@ -29,25 +51,32 @@ app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRippl
 }])
 
 app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', 'updateActiveCrew', function($scope, $log, getCrew, updateActiveCrew) {
-  $scope.crew = []
+
   // $scope.activeCrew array declared in LogisticsController
   $scope.selectedCrew = ''
   $scope.allCrewIsShowing = false
 
-  getCrew().then(function(crew_result) {
-    $log.log('getCrew().then() is running!')
-    $log.log(crew_result[500].firstName)
-    $scope.crew = crew_result
-    Object.keys($scope.crew).forEach(function(personId) {
-      $scope.crew[personId].numPassengers = parseInt($scope.crew[personId].numPassengers) //not loading into number input for some reason
-      if ($scope.crew[personId].isOnLogistics == '1' || $scope.crew[personId.isOnLogistics == 1]) {
-        $scope.crew[personId].isOnLogistics = 1
-        $scope.activeCrew.push(parseInt(personId))
-      } else {
-        $scope.crew[personId].isOnLogistics = 0
-      }
+  $scope.carpoolSitesWillLoad_defer.promise.then(function() {
+
+    getCrew().then(function(crew_result) {
+      $scope.crew = crew_result
+      Object.keys($scope.crew).forEach(function(personId) {
+        $scope.crew[personId].numPassengers = parseInt($scope.crew[personId].numPassengers) //not loading into number input for some reason
+        if ($scope.crew[personId].isOnLogistics == '1' || $scope.crew[personId.isOnLogistics == 1]) {
+          $scope.crew[personId].isOnLogistics = 1
+          $scope.activeCrew.push(parseInt(personId))
+          $scope.carpoolSites[$scope.crew[personId].primaryCarpool_id].assignedCrew.push(personId)
+        } else {
+          $scope.crew[personId].isOnLogistics = 0
+        }
+      })
+      $log.log('$scope.carpoolSites: ' + dump($scope.carpoolSites, 'none'))
     })
   })
+
+  $scope.logPersonId = function(id) {
+    $log.log("logPersonId: " + id)
+  }
 
   $scope.toggleActive = function(personId, activeStatus) {
     if (typeof personId !== 'undefined') {
@@ -190,7 +219,7 @@ app.controller('ActiveGroupsSelectionController', ['$scope','$log', 'getGroups',
 
 }])
 
-app.controller('VolunteerCarsAllocationController', ['$scope', '$log', 'getTeerCars', 'updateActiveTeerCar', 'addTeerCarModal', function($scope, $log, getTeerCars, updateActiveTeerCar, addTeerCarModal) {
+app.controller('VolunteerCarsAllocationController', ['$scope', '$log', '$mdToast', 'getTeerCars', 'updateActiveTeerCar', 'addTeerCarModal', 'deleteTeerCar', function($scope, $log, $mdToast, getTeerCars, updateActiveTeerCar, addTeerCarModal, deleteTeerCar) {
 
   $log.log('VolunteerCarsAllocationController is running!')
 
@@ -222,9 +251,19 @@ app.controller('VolunteerCarsAllocationController', ['$scope', '$log', 'getTeerC
     })
   }
 
-  $scope.addNew = function() {
-    addTeerCarModal($scope.carpoolSites, $scope.projectSites, $scope.getSitesForProject)
+  $scope.addNew = function () {
+    var teerCarPromise = addTeerCarModal($scope.carpoolSites, $scope.projectSites, $scope.getSitesForProject)
+
+    teerCarPromise.then(function success(newCar) {
+      $scope.teerCars[newCar.carpoolSite_id] = newCar
+      $log.log("New car: " + dump($scope.teerCars[newCar.carpoolSite_id], 'none'))
+    })
   }
 
+  $scope.delete = function (id) {
+    deleteTeerCar(id).then(function success() {
+      delete $scope.teerCars[id]
+    })
+  }
 
 }])

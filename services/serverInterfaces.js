@@ -111,3 +111,16 @@ app.factory('updateActiveCrew', ['$log', '$q', '$http', '$mdToast', function($lo
 
   }
 }])
+
+
+app.factory('deleteTeerCar', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http) {
+  return function(myId) {
+    return $http({
+      url: "appServer/teerCars/deleteTeerCar.php",
+      method: "POST",
+      params: {
+        'id': myId
+      }
+    })
+  }
+}])

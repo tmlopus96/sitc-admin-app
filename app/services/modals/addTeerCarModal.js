@@ -1,8 +1,10 @@
 var app = angular.module('adminApp')
 
-app.factory('addTeerCarModal', ['$log', '$mdDialog', '$http', function($log, $mdDialog, $http) {
+app.factory('addTeerCarModal', ['$log', '$q', '$mdDialog', '$http', function($log, $q, $mdDialog, $http) {
 
   return function (myCarpoolSites, myProjectSites, myGetSitesForProject) {
+
+    var defer = $q.defer()
 
     $mdDialog.show({
       templateUrl: 'app/views/modals/addTeerCarModalTemplate.html',
@@ -25,11 +27,14 @@ app.factory('addTeerCarModal', ['$log', '$mdDialog', '$http', function($log, $md
         }
       }).then(function(response) {
         $log.log("Response from addNewTeerCar.php: " + dump(response, 'none'))
+        return
       },
       function(error) {
         // error handling
       })
+      defer.resolve(newCar)
     })
+    return defer.promise
   }
 }])
 

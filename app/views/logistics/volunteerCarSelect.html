@@ -19,7 +19,7 @@
     <tbody md-body>
       <tr md-row ng-repeat="(teerCarId, teerCarInfo) in teerCars">
         <td md-cell>
-          <md-icon class="material-icons" style="font-size:18px !important">close</md-icon>
+          <md-icon class="material-icons" style="font-size:18px !important" ng-click="delete(teerCarId)">close</md-icon>
         </td>
         <td md-cell>{{ carpoolSites[teerCarInfo.carpoolSite_id].name }}</td>
         <td md-cell>
