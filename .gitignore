@@ -2,3 +2,6 @@ bower_components
 .DS_Store
 node_modules
 tools/scratch.html
+app/stylesheets/.sass-cache/
+adminAppStylesheet.css
+app/stylesheets/adminAppStylesheet.css.map

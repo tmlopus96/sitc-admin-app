@@ -1,0 +1,20 @@
+<md-dialog aria-label="Add site dialog" style="min-width:50%">
+  <md-dialog-content layout-padding>
+    <md-tabs md-center-tabs md-selected="selectedTab">
+      <md-tab id="crew" label="Crew" ng-click="gotoTab('crew')">
+         <div ui-sref=".crew"></div>
+      </md-tab>
+      <md-tab id="van" label="Van" ng-click="gotoTab('van')">
+         <div ui-view="van"></div>
+      </md-tab>
+      <md-tab id="teerCar" label="Volunteer Car" ng-click="gotoTab('teerCar')">
+         <div ui-view="teerCar"></div>
+      </md-tab>
+      <md-tab id="group" label="Group" ng-click="gotoTab('group')">
+         <div ui-view="group"></div>
+      </md-tab>
+    </md-tabs>
+
+    <div ui-view></div>
+  </md-dialog-content>
+</md-dialog>

@@ -1,0 +1,57 @@
+.carpool-card-counter-text {
+  padding-bottom: 0;
+  padding-top: 0;
+  text-align: center;
+}
+
+.carpool-card-crew-list-item {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+md-tooltip {
+ visibility: visible !important;
+}
+
+.md-fab-action-item {
+  padding-bottom: 7px;
+}
+
+.speedDialButton {
+  height: auto !important;
+  width: auto !important;
+  max-width: 36px !important;
+  box-shadow: 0 0 0 0 !important;
+
+  md-icon {
+    // color: white !important;
+  }
+}
+
+#speedDialTriggerButton {
+  background-color: #00897B;
+}
+
+.md-fab {
+  margin-right: 0;
+}
+
+/* Modals */
+#carpoolPanelModalContent {
+  padding: 10px;
+}
+
+.md-autocomplete-suggestions li {
+  height: auto;
+}
+
+.active-crew-button {
+  color: #26c6da;
+}
+
+md-list.carpool-panel-list {
+  md-list-item {
+    height: 30 !important;
+    min-height: 55 !important;
+  }
+}

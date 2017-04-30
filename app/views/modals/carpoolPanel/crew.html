@@ -1,0 +1,50 @@
+<md-dialog flex-gt-sm="70" flex-sm="85" flex-xs="95">
+  <md-dialog-content>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Add Crew to {{ carpoolSites[myCarpoolSite].name }}</h2>
+      </div>
+    </md-toolbar>
+
+    <div id="carpoolPanelModalContent">
+      <md-autocomplete
+        md-selected-item="selectedItem"
+        md-search-text="searchText"
+        md-items="person in filterSearch(searchText)"
+        md-no-cache="true"
+        md-item-text="person.name"
+        md-selected-item-change="returnSelectedPerson(person.person_id)"
+        placeholder="Search"
+        style="margin-top:15px;">
+        <md-item-template>
+          <div style="height:50px;" layout="row">
+            <md-button class="md-icon-button">
+              <md-icon class="sitc-icon-">{{ person.assignedProject }}</md-icon>
+            </md-button>
+            <div>
+              <div><span class="md-subhead" style="font-weight:500">{{ person.firstName + ' ' + person.lastName }}</span></div>
+              <div ng-show="person.carpoolSite_id == null || person.carpoolSite_id == ''"><span class="md-subhead">{{ (person.assignedToSite_id) ? projectSites[person.assignedToSite_id].name : projectSites[person.assignedSite].name}}</span></div>
+              <div ng-show="person.carpoolSite_id != null && person.carpoolSite_id != ''"><span class="md-subhead">Already on logistics at: </span><span class="md-subhead" style="font-weight:500">{{ carpoolSites[person.carpoolSite_id].name }}</span></div>
+            </div>
+          </div>
+        </md-item-template>
+      </md-autocomplete>
+
+      <table>
+
+        <tr ng-repeat="personId in inactiveCrew" style="cursor:pointer" ng-click="returnSelectedPerson(personId)">
+          <td html-content="true">
+            <md-icon class="sitc-icon-">{{ crew[personId].assignedProject }}</md-icon>
+          </td>
+          <td>{{ crew[personId].firstName + ' ' + crew[personId].lastName }}</td>
+          <td>
+            <div ng-show="crew[personId].numSeatbelts > 0">
+              <md-icon>drive_eta</md-icon>
+              <span>{{ crew[personId].numSeatbelts }}</span>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div> <!-- end #CarpoolPanelModalContent -->
+  </md-dialog-content>
+</md-dialog>

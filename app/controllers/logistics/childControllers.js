@@ -1,24 +1,43 @@
 var app = angular.module('adminApp')
 
-app.controller('CarpoolPanelController', ['$scope', '$log', '$mdToast', 'getProjectSites', 'getCrew', function($scope, $log, $mdToast, getProjectSites, getCrew) {
+app.controller('CarpoolPanelController', ['$scope', '$log', '$mdToast', 'getProjectSites', 'getCrew', 'addCrewPanelModal', 'updateActiveCrew', function($scope, $log, $mdToast, getProjectSites, getCrew, addCrewPanelModal, updateActiveCrew) {
 
-  $scope.carpoolSitesWillLoad_defer.promise.then(function() {
+  $scope.speedDialIsOpen = false
 
-    getCrew().then(function(crew_result) {
-      $scope.crew = crew_result
-      Object.keys($scope.crew).forEach(function(personId) {
-        $scope.crew[personId].numPassengers = parseInt($scope.crew[personId].numPassengers) //not loading into number input for some reason
-        if ($scope.crew[personId].isOnLogistics == '1' || $scope.crew[personId.isOnLogistics == 1]) {
-          $scope.crew[personId].isOnLogistics = 1
-          $scope.activeCrew.push(parseInt(personId))
-          $scope.carpoolSites[$scope.crew[personId].primaryCarpool_id].assignedCrew.push(personId)
-        } else {
-          $scope.crew[personId].isOnLogistics = 0
-        }
-      })
-      $log.log('$scope.carpoolSites: ' + dump($scope.carpoolSites, 'none'))
+  $scope.add = function(carpoolSite) {
+    addCrewPanelModal(carpoolSite, $scope.crew, $scope.carpoolSites, $scope.projectSites).then(function success (personId) {
+        updateActiveCrew(personId, 1, {'carpoolSite_id':carpoolSite}).then(function success (response) {
+            $log.log('updateActiveCrew response: ' + dump(response, 'none'))
+            var personId = response.config.params.personId
+            // In case this person is already on logistics for another carpool site, delete them from that site's array
+            if ($scope.crew[personId].carpoolSite_id) {
+              var index = $scope.carpoolSites[$scope.crew[personId].carpoolSite_id].assignedCrew.indexOf(personId)
+              $scope.carpoolSites[$scope.crew[personId].carpoolSite_id].assignedCrew.splice(index, 1)
+            }
+
+            // If this person is not already in $scope.activeCrew, push them to it
+            var activeIndex = $scope.activeCrew.indexOf(personId)
+            if (activeIndex == -1) {
+              $scope.activeCrew.push(personId)
+            }
+
+            $scope.crew[personId].carpoolSite_id = carpoolSite
+            $scope.crew[personId].isOnLogistics = 1
+            $scope.carpoolSites[carpoolSite].assignedCrew.push(personId)
+            $log.log('AssignedCrew: ' + dump($scope.carpoolSites[carpoolSite].assignedCrew, 'none'))
+        })
     })
-  })
+  }
+
+  function hideSpeedDialButtons(){
+      var speedDialButton_first = angular.element(document.querySelectorAll('#speedDialActionButton_first')).parent()
+      var speedDialButton_second = angular.element(document.querySelectorAll('#speedDialActionButton_second')).parent()
+      var speedDialButton_third = angular.element(document.querySelectorAll('#speedDialActionButton_third')).parent()
+
+      speedDialButton_first.css({'transform':'translate(44px)', 'z-index':'-21'})
+      speedDialButton_second.css({'transform':'translate(88px)', 'z-index':'-22'})
+      speedDialButton_third.css({'transform':'translate(132px)', 'z-index':'-23'})
+    }
 
 }])
 
@@ -55,24 +74,6 @@ app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', 'u
   // $scope.activeCrew array declared in LogisticsController
   $scope.selectedCrew = ''
   $scope.allCrewIsShowing = false
-
-  $scope.carpoolSitesWillLoad_defer.promise.then(function() {
-
-    getCrew().then(function(crew_result) {
-      $scope.crew = crew_result
-      Object.keys($scope.crew).forEach(function(personId) {
-        $scope.crew[personId].numPassengers = parseInt($scope.crew[personId].numPassengers) //not loading into number input for some reason
-        if ($scope.crew[personId].isOnLogistics == '1' || $scope.crew[personId.isOnLogistics == 1]) {
-          $scope.crew[personId].isOnLogistics = 1
-          $scope.activeCrew.push(parseInt(personId))
-          $scope.carpoolSites[$scope.crew[personId].primaryCarpool_id].assignedCrew.push(personId)
-        } else {
-          $scope.crew[personId].isOnLogistics = 0
-        }
-      })
-      $log.log('$scope.carpoolSites: ' + dump($scope.carpoolSites, 'none'))
-    })
-  })
 
   $scope.logPersonId = function(id) {
     $log.log("logPersonId: " + id)

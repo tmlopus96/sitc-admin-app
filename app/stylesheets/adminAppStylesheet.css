@@ -1,29 +1,77 @@
-@media only screen and (min-width: 768px) {
-  #mainView {
-    width: 90%;
-    margin: auto auto;
-  }
-  .anchor-button-text {
-    font-size: 16px !important;
-  }
-}
+.carpool-card-counter-text {
+  padding-bottom: 0;
+  padding-top: 0;
+  text-align: center; }
 
 .carpool-card-crew-list-item {
   padding-left: 0 !important;
-  padding-right: 0 !important;
-}
+  padding-right: 0 !important; }
 
+md-tooltip {
+  visibility: visible !important; }
+
+.md-fab-action-item {
+  padding-bottom: 7px; }
+
+.speedDialButton {
+  height: auto !important;
+  width: auto !important;
+  max-width: 36px !important;
+  box-shadow: 0 0 0 0 !important; }
+
+#speedDialTriggerButton {
+  background-color: #00897B; }
+
+.md-fab {
+  margin-right: 0; }
+
+/* Modals */
+#carpoolPanelModalContent {
+  padding: 10px; }
+
+.md-autocomplete-suggestions li {
+  height: auto; }
+
+.active-crew-button {
+  color: #26c6da; }
+
+md-list.carpool-panel-list md-list-item {
+  height: 30 !important;
+  min-height: 55 !important; }
+
+@media only screen and (min-width: 768px) {
+  #mainView {
+    width: 90%;
+    margin: auto auto; }
+
+  .anchor-button-text {
+    font-size: 16px !important; } }
 /* Official Material Icon Font styles from google.github.io/material-design-icons */
-  /* Rules for sizing the icon. */
-  .material-icons.md-18 { font-size: 18px; }
-  .material-icons.md-24 { font-size: 24px; }
-  .material-icons.md-36 { font-size: 36px; }
-  .material-icons.md-48 { font-size: 48px; }
+/* Rules for sizing the icon. */
+.material-icons.md-18 {
+  font-size: 18px; }
 
-  /* Rules for using icons as black on a light background. */
-  .material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
-  .material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+.material-icons.md-24 {
+  font-size: 24px; }
 
-  /* Rules for using icons as white on a dark background. */
-  .material-icons.md-light { color: rgba(255, 255, 255, 1); }
-  .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+.material-icons.md-36 {
+  font-size: 36px; }
+
+.material-icons.md-48 {
+  font-size: 48px; }
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark {
+  color: rgba(0, 0, 0, 0.54); }
+
+.material-icons.md-dark.md-inactive {
+  color: rgba(0, 0, 0, 0.26); }
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light {
+  color: white; }
+
+.material-icons.md-light.md-inactive {
+  color: rgba(255, 255, 255, 0.3); }
+
+/*# sourceMappingURL=adminAppStylesheet.css.map */

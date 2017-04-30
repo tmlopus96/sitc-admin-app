@@ -19,6 +19,13 @@
     array_push($updateClauses, "isOnLogistics=" . $isActive);
   }
 
+  if (isset($_GET["carpoolSite_id"])) {
+    $carpoolSite = sanitize($_GET["carpoolSite_id"]);
+    array_push($queryFields, 'carpoolSite_id');
+    array_push($queryValues, $carpoolSite);
+    array_push($updateClauses, "carpoolSite_id='" . $carpoolSite . "'");
+  }
+
   if (isset($_GET["site"])) {
     $site = $_GET["site"];
     array_push($queryFields, 'assignedToSite_id');

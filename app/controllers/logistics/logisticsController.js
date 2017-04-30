@@ -4,9 +4,9 @@ app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites'
   $log.log('Hello, world! LogisticsController is running!')
 
   $scope.carpoolSites = {}
-  $scope.crew = {}
   $scope.projectSites = {}
   $scope.activeSites = []
+  $scope.crew = {}
   $scope.activeCrew = []
   $scope.activeGroups = []
 
@@ -22,7 +22,8 @@ app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites'
     })
   })
 
-  $scope.carpoolSitesWillLoad_defer = $q.defer()
+  // Load carpool sites, then load Crew
+  // $scope.carpoolSitesWillLoad_defer = $q.defer()
   getCarpoolSites().then(function(sites_result) {
     $scope.carpoolSites = sites_result
     Object.keys($scope.carpoolSites).forEach(function(siteId) {
@@ -30,7 +31,23 @@ app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites'
       $scope.carpoolSites[siteId]["assignedVans"] = []
     })
     // $log.log('$scope.carpoolSites: ' + dump($scope.carpoolSites, 'none'))
-    $scope.carpoolSitesWillLoad_defer.resolve()
+    // $scope.carpoolSitesWillLoad_defer.resolve()
+  }).then(function() {
+    getCrew().then(function(crew_result) {
+      $scope.crew = crew_result
+      Object.keys($scope.crew).forEach(function(personId) {
+        $scope.crew[personId].numPassengers = parseInt($scope.crew[personId].numPassengers) //not loading into number input for some reason
+        if ($scope.crew[personId].isOnLogistics == '1' || $scope.crew[personId.isOnLogistics == 1]) {
+          $scope.crew[personId].isOnLogistics = 1
+          $scope.activeCrew.push(parseInt(personId))
+          if ($scope.crew[personId].carpoolSite_id) {
+            $scope.carpoolSites[$scope.crew[personId].carpoolSite_id].assignedCrew.push(personId)
+          }
+        } else {
+          $scope.crew[personId].isOnLogistics = 0
+        }
+      })
+    })
   })
 
   $scope.getSitesForProject = function(project) {
