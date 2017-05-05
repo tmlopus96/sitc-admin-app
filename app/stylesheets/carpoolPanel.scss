@@ -9,6 +9,10 @@
   padding-right: 0 !important;
 }
 
+.carpool-card-teerCar-list-item {
+  @extend .carpool-card-crew-list-item;
+}
+
 md-tooltip {
  visibility: visible !important;
 }

@@ -1,1 +1,42 @@
-<h1>I am the Van template!</h1>
+<md-dialog flex-gt-sm="40" flex-sm="70" flex-xs="80">
+  <md-dialog-content>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Add a van to {{ carpoolSites[myCarpoolSite].name }}</h2>
+      </div>
+    </md-toolbar>
+
+    <div id="carpoolPanelModalContent">
+      <md-list>
+        <md-list-item class="md-2-line" ng-repeat="vanId in inactiveVans" ng-click="returnSelectedVan(vanId)">
+          <div class="md-list-item-text">
+            <h3>{{ vans[vanId].name }}</h3>
+          </div>
+          <span flex></span>
+          <div class="md-list-item-text">
+            <h4>{{ vans[vanId].numSeatbelts }}</h4>
+          </div>
+        </md-list-item>
+      </md-list>
+
+      <div >
+        <md-divider ng-show="inactiveVans.length > 0"></md-divider>
+        <md-subheader>Already Assigned</md-subheader>
+      </div>
+
+      <md-list>
+        <md-list-item class="md-2-line" ng-repeat="vanId in activeVans" ng-click="returnSelectedVan(vanId)" layout="row">
+          <div class="md-list-item-text">
+            <h3>{{ vans[vanId].name }}</h3>
+            <h4>Already assigned to {{ carpoolSites[vans[vanId].carpoolSite].name }}</h4>
+          </div>
+          <span flex></span>
+          <div class="md-list-item-text">
+            <h4>{{ vans[vanId].numSeatbelts }}</h4>
+          </div>
+        </md-list-item>
+      </md-list>
+    </div>
+
+  </md-dialog-content>
+</md-dialog>

@@ -42,16 +42,35 @@
           </md-list-item>
         </md-list>
 
+        <div ng-show="carpoolSites[site].assignedVans.length > 0">
+          <md-divider></md-divider>
+          <md-subheader>Vans</md-subheader>
+        </div>
+
+        <md-list class="carpool-panel-list">
+          <md-list-item class="md-2-line carpool-card-teerCar-list-item" ng-repeat="vanId in carpoolSites[site].assignedVans" layout="row" layout-align="center center">
+            <md-button class="md-icon-button" ng-click="removeVan(vanId, site)" style="margin: auto !important">
+              <md-icon style="margin-right: 12px; margin: auto !important">close</md-icon>
+            </md-button>
+            <div class="md-list-item-text">
+              <h3>{{ vans[vanId].name }}</h3>
+            </div>
+            <div class="md-list-item-text" layout="row">
+              <h3>{{ vans[vanId].numSeatbelts }}</h3>
+            </div>
+          </md-list-item>
+        </md-list>
+
         <div ng-show="carpoolSites[site].assignedTeerCars.length > 0">
           <md-divider></md-divider>
           <md-subheader>Volunteer Cars</md-subheader>
         </div>
 
         <md-list class="carpool-panel-list">
-          <md-list-item class="md-2-line carpool-card-crew-list-item" ng-repeat="teerCarId in carpoolSites[site].assignedTeerCars" layout="row" layout-align="center center">
-            <div style="width:24px">
-              <!-- Empty column, for sake of alignment with other columns -->
-            </div>
+          <md-list-item class="md-2-line carpool-card-teerCar-list-item" ng-repeat="teerCarId in carpoolSites[site].assignedTeerCars" layout="row" layout-align="center center">
+            <md-button class="md-icon-button" ng-click="removeTeerCar(teerCarId, site)" style="margin: auto !important">
+              <md-icon style="margin-right: 12px; margin: auto !important">close</md-icon>
+            </md-button>
             <div class="md-list-item-text">
               <h3>{{ projectSites[teerCars[teerCarId].assignedToSite].name }}</h3>
             </div>
@@ -75,7 +94,7 @@
              </md-fab-trigger>
              <md-fab-actions>
                <div>
-                 <md-button class="md-fab md-raised md-mini md-primary md-hue-1 speedDialButton" aria-label="Add Van">
+                 <md-button class="md-fab md-raised md-mini md-primary md-hue-1 speedDialButton" aria-label="Add Van" ng-click="addVan(site)">
                    <md-tooltip md-direction="right">Add Van</md-tooltip>
                    <md-icon>drive_eta</md-icon>
                  </md-button>

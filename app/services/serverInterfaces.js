@@ -128,6 +128,30 @@ app.factory('getTeerCars', ['$log', '$q', '$http', function($log, $q, $http) {
   }
 }])
 
+app.factory('getVans', ['$log', '$q', '$http', function($log, $q, $http) {
+
+  return function() {
+    var defer = $q.defer()
+
+     $http({
+      url: "app/appServer/getVans.php",
+      method: "GET"
+    }).then(
+      function(response) {
+        var vans = {}
+        response.data.forEach(function(currentVan) {
+          vans[currentVan.van_id] = currentVan
+        })
+        defer.resolve(vans)
+      },
+      function(error) {
+        //TODO error handling
+      })
+
+    return defer.promise
+  }
+}])
+
 /*** Setters ***/
 
 app.factory('toggleSiteActive', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http, $mdToast) {
@@ -200,6 +224,26 @@ app.factory('updateActiveTeerCar', ['$log', '$q', '$http', '$mdToast', function(
 
     return $http({
       url: "app/appServer/teerCars/updateActiveTeerCar.php",
+      method: 'POST',
+      params: paramsToUpdate
+    })
+    // TODO: catch errors on server fail
+
+  }
+}])
+
+app.factory('updateVan', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http, $mdToast) {
+  return function(myVanId, myNewLogisticsStatus, paramsToUpdate) {
+
+    if (!paramsToUpdate) {
+      paramsToUpdate = {}
+    }
+
+    paramsToUpdate["vanId"] = myVanId
+    paramsToUpdate["isOnLogistics"] = myNewLogisticsStatus
+
+    return $http({
+      url: "app/appServer/updateVan.php",
       method: 'POST',
       params: paramsToUpdate
     })

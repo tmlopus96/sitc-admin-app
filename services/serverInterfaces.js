@@ -79,6 +79,30 @@ app.factory('getCrew', ['$log', '$q', '$http', function($log, $q, $http) {
   }
 }])
 
+app.factory('getVans', ['$log', '$q', '$http', function($log, $q, $http) {
+
+  return function() {
+    var defer = $q.defer()
+
+     $http({
+      url: "app/appServer/getVans.php",
+      method: "GET"
+    }).then(
+      function(response) {
+        var vans = {}
+        response.data.forEach(function(currentVan) {
+          vans[currentVan.van_id] = currentVan
+        })
+        defer.resolve(vans)
+      },
+      function(error) {
+        //TODO error handling
+      })
+
+    return defer.promise
+  }
+}])
+
 app.factory('toggleSiteActive', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http, $mdToast) {
   return function(mySiteId, myActiveStatus) {
 

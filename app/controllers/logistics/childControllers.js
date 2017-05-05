@@ -1,6 +1,6 @@
 var app = angular.module('adminApp')
 
-app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$mdDialog', 'getProjectSites', 'getCrew', 'addCrewPanelModal', 'addTeerCarModal', 'updateActiveCrew', function($scope, $log, $q, $mdToast, $mdDialog, getProjectSites, getCrew, addCrewPanelModal, addTeerCarModal, updateActiveCrew) {
+app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$mdDialog', 'getProjectSites', 'getCrew', 'addCrewPanelModal', 'addVanPanelModal', 'addTeerCarModal', 'updateActiveCrew', 'deleteTeerCar', 'updateVan', function($scope, $log, $q, $mdToast, $mdDialog, getProjectSites, getCrew, addCrewPanelModal, addVanPanelModal, addTeerCarModal, updateActiveCrew, deleteTeerCar, updateVan) {
 
   $scope.speedDialIsOpen = false
 
@@ -70,6 +70,44 @@ app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$
     addTeerCarModal($scope.carpoolSites, $scope.projectSites, $scope.getSitesForProject, carpoolSite).then(function success (newCar) {
       $scope.teerCars[newCar.teerCar_id] = newCar
       $scope.carpoolSites[carpoolSite].assignedTeerCars.push(newCar.teerCar_id)
+    })
+  }
+
+  $scope.removeTeerCar = function (teerCarId, carpoolSite) {
+    deleteTeerCar(teerCarId).then(function success () {
+      var index = $scope.carpoolSites[carpoolSite].assignedTeerCars.indexOf(teerCarId)
+      $scope.carpoolSites[carpoolSite].assignedTeerCars.splice(index, 1)
+      delete $scope.teerCars[teerCarId]
+    }, function failure () {
+      // error handling
+    })
+  }
+
+  $scope.addVan = function (carpoolSite) {
+    addVanPanelModal(carpoolSite, $scope.vans, $scope.carpoolSites).then(function success (vanId) {
+        updateVan(vanId, 1, {'carpoolSite':carpoolSite}).then(function success() {
+          // remove this van from its current carpool site, if it has one
+          if ($scope.vans[vanId].carpoolSite != null && $scope.vans[vanId].carpoolSite != '') {
+            var index = $scope.carpoolSites[$scope.vans[vanId].carpoolSite].assignedVans.indexOf(vanId)
+            $scope.carpoolSites[$scope.vans[vanId].carpoolSite].assignedVans.splice(index, 1)
+          }
+
+          $scope.vans[vanId].carpoolSite = carpoolSite
+          $scope.vans[vanId].isOnLogistics = 1
+          $scope.carpoolSites[$scope.vans[vanId].carpoolSite].assignedVans.push(vanId)
+        }, function failure() {
+          // error handling
+      })
+    })
+  }
+
+  $scope.removeVan = function (vanId, carpoolSite) {
+    updateVan(vanId, 0).then(function success () {
+      var index = $scope.carpoolSites[carpoolSite].assignedVans.indexOf(vanId)
+      $scope.carpoolSites[carpoolSite].assignedVans.splice(index, 1)
+      delete $scope.teerCars[vanId]
+    }, function failure () {
+      // error handling
     })
   }
 

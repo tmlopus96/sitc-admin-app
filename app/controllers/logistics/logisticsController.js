@@ -1,6 +1,6 @@
 var app = angular.module('adminApp')
 
-app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites', 'getCarpoolSites', 'getCrew', 'getTeerCars', function($scope, $log, $q, getProjectSites, getCarpoolSites, getCrew, getTeerCars) {
+app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites', 'getCarpoolSites', 'getCrew', 'getTeerCars', 'getVans', function($scope, $log, $q, getProjectSites, getCarpoolSites, getCrew, getTeerCars, getVans) {
   $log.log('Hello, world! LogisticsController is running!')
 
   $scope.carpoolSites = {}
@@ -9,6 +9,8 @@ app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites'
   $scope.crew = {}
   $scope.activeCrew = []
   $scope.activeGroups = []
+  $scope.teerCars = {}
+  $scope.vans = {}
 
   getProjectSites().then(function(sites_result) {
     $scope.projectSites = sites_result
@@ -63,6 +65,23 @@ app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites'
         }
       })
       $log.log('$scope.teerCars' + dump($scope.teerCars, 'none'))
+    })
+  }).then(function () {
+    getVans().then(function (vans_response) {
+      $scope.vans = vans_response
+      Object.keys($scope.vans).forEach(function (vanId) {
+
+        $scope.vans[vanId].numPassengers = ($scope.vans[vanId].numPassengers == null || $scope.vans[vanId].numPassengers == 0) ? 0 : parseInt($scope.vans[vanId].numPassengers)
+        $scope.vans[vanId].numSeatbelts = ($scope.vans[vanId].numSeatbelts == null || $scope.vans[vanId].numSeatbelts == 0) ? 0 : parseInt($scope.vans[vanId].numSeatbelts)
+
+        if ($scope.vans[vanId].isOnLogistics == '1' || $scope.vans[vanId.isOnLogistics == 1]) {
+          $scope.vans[vanId].isOnLogistics = 1
+          $scope.carpoolSites[$scope.vans[vanId].carpoolSite].assignedVans.push(vanId)
+        } else {
+          $scope.vans[vanId].isOnLogistics = 0
+        }
+
+      })
     })
   })
 

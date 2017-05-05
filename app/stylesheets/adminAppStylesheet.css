@@ -3,7 +3,7 @@
   padding-top: 0;
   text-align: center; }
 
-.carpool-card-crew-list-item {
+.carpool-card-crew-list-item, .carpool-card-teerCar-list-item {
   padding-left: 0 !important;
   padding-right: 0 !important; }
 
