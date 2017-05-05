@@ -30,7 +30,7 @@
       <md-card-content>
         <md-list class="carpool-panel-list">
           <md-list-item class="md-2-line carpool-card-crew-list-item" ng-repeat="personId in info.assignedCrew" layout="row" layout-align="center center">
-            <md-icon class="md-18" style="margin-right: 12px; margin: auto !important">{{(crew[personId].hasPermanentAssignment == 1) ? "lock" : "clear"}}</md-icon>
+            <md-icon class="md-18" style="margin-right: 12px; margin: auto !important" ng-click="removeCrew(personId, crew[personId].firstName, crew[personId].carpoolSite_id)">{{(crew[personId].hasPermanentAssignment == 1) ? "lock" : "clear"}}</md-icon>
             <div class="md-list-item-text">
               <h3>{{ crew[personId].firstName }} {{ crew[personId].lastName }}</h3>
               <h4>{{ projectSites[crew[personId].assignedToSite_id].name }}</h4>

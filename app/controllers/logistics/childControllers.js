@@ -1,6 +1,6 @@
 var app = angular.module('adminApp')
 
-app.controller('CarpoolPanelController', ['$scope', '$log', '$mdToast', 'getProjectSites', 'getCrew', 'addCrewPanelModal', 'updateActiveCrew', function($scope, $log, $mdToast, getProjectSites, getCrew, addCrewPanelModal, updateActiveCrew) {
+app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$mdDialog', 'getProjectSites', 'getCrew', 'addCrewPanelModal', 'updateActiveCrew', function($scope, $log, $q, $mdToast, $mdDialog, getProjectSites, getCrew, addCrewPanelModal, updateActiveCrew) {
 
   $scope.speedDialIsOpen = false
 
@@ -26,6 +26,43 @@ app.controller('CarpoolPanelController', ['$scope', '$log', '$mdToast', 'getProj
             $scope.carpoolSites[carpoolSite].assignedCrew.push(personId)
             $log.log('AssignedCrew: ' + dump($scope.carpoolSites[carpoolSite].assignedCrew, 'none'))
         })
+    })
+  }
+
+  $scope.removeCrew = function (withId, firstName, carpoolSite) {
+    var defer = $q.defer()
+
+    if ($scope.crew[withId].hasPermanentAssignment == 1) {
+      var confirm = $mdDialog.confirm()
+          .title(`${firstName} is permanently assigned to the ${carpoolSite} carpool site.`)
+          .textContent('Would you still like to remove them from this site for today?')
+          .ariaLabel('Remove from permanent assignement')
+          .ok('Remove anyway')
+          .cancel('Cancel');
+
+      $mdDialog.show(confirm).then(function yes () {
+        defer.resolve()
+      }, function no () {
+        defer.reject()
+      })
+    }
+    else {
+      defer.resolve()
+    }
+
+    defer.promise.then(function yes() {
+      updateActiveCrew(withId, 0).then(function success() {
+        $scope.crew[withId].carpoolSite_id = ''
+        $scope.crew[withId].isOnLogistics = 0
+
+        var index = $scope.carpoolSites[carpoolSite].assignedCrew.indexOf(withId)
+        $scope.carpoolSites[carpoolSite].assignedCrew.splice(index, 1)
+
+        index = $scope.activeCrew.indexOf(withId)
+        $scope.activeCrew.splice(index)
+      })
+    }, function no() {
+      return
     })
   }
 
