@@ -1,6 +1,6 @@
 var app = angular.module('adminApp')
 
-app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites', 'getCarpoolSites', 'getCrew', function($scope, $log, $q, getProjectSites, getCarpoolSites, getCrew) {
+app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites', 'getCarpoolSites', 'getCrew', 'getTeerCars', function($scope, $log, $q, getProjectSites, getCarpoolSites, getCrew, getTeerCars) {
   $log.log('Hello, world! LogisticsController is running!')
 
   $scope.carpoolSites = {}
@@ -29,6 +29,7 @@ app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites'
     Object.keys($scope.carpoolSites).forEach(function(siteId) {
       $scope.carpoolSites[siteId]["assignedCrew"] = []
       $scope.carpoolSites[siteId]["assignedVans"] = []
+      $scope.carpoolSites[siteId]["assignedTeerCars"] = []
     })
     // $log.log('$scope.carpoolSites: ' + dump($scope.carpoolSites, 'none'))
     // $scope.carpoolSitesWillLoad_defer.resolve()
@@ -47,6 +48,21 @@ app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites'
           $scope.crew[personId].isOnLogistics = 0
         }
       })
+    })
+  }).then(function () {
+    getTeerCars().then(function(teerCars_result) {
+      $scope.teerCars = teerCars_result
+      Object.keys($scope.teerCars).forEach(function(teerCar_id) {
+        $scope.carpoolSites[$scope.teerCars[teerCar_id].carpoolSite_id].assignedTeerCars.push(teerCar_id)
+
+        $scope.teerCars[teerCar_id].assignedNumPassengers = parseInt($scope.teerCars[teerCar_id].assignedNumPassengers)
+        if ($scope.teerCars[teerCar_id].isActive == '1' || $scope.teerCars[teerCar_id.isActive == 1]) {
+          $scope.teerCars[teerCar_id].isActive = 1
+        } else {
+          $scope.teerCars[teerCar_id].isActive = 0
+        }
+      })
+      $log.log('$scope.teerCars' + dump($scope.teerCars, 'none'))
     })
   })
 

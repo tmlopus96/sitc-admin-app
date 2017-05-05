@@ -1,10 +1,10 @@
 var app = angular.module('adminApp')
 
-app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$mdDialog', 'getProjectSites', 'getCrew', 'addCrewPanelModal', 'updateActiveCrew', function($scope, $log, $q, $mdToast, $mdDialog, getProjectSites, getCrew, addCrewPanelModal, updateActiveCrew) {
+app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$mdDialog', 'getProjectSites', 'getCrew', 'addCrewPanelModal', 'addTeerCarModal', 'updateActiveCrew', function($scope, $log, $q, $mdToast, $mdDialog, getProjectSites, getCrew, addCrewPanelModal, addTeerCarModal, updateActiveCrew) {
 
   $scope.speedDialIsOpen = false
 
-  $scope.add = function(carpoolSite) {
+  $scope.addCrew = function(carpoolSite) {
     addCrewPanelModal(carpoolSite, $scope.crew, $scope.carpoolSites, $scope.projectSites).then(function success (personId) {
         updateActiveCrew(personId, 1, {'carpoolSite_id':carpoolSite}).then(function success (response) {
             $log.log('updateActiveCrew response: ' + dump(response, 'none'))
@@ -63,6 +63,13 @@ app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$
       })
     }, function no() {
       return
+    })
+  }
+
+  $scope.addTeerCar = function (carpoolSite) {
+    addTeerCarModal($scope.carpoolSites, $scope.projectSites, $scope.getSitesForProject, carpoolSite).then(function success (newCar) {
+      $scope.teerCars[newCar.teerCar_id] = newCar
+      $scope.carpoolSites[carpoolSite].assignedTeerCars.push(newCar.teerCar_id)
     })
   }
 
@@ -293,7 +300,7 @@ app.controller('VolunteerCarsAllocationController', ['$scope', '$log', '$mdToast
     var teerCarPromise = addTeerCarModal($scope.carpoolSites, $scope.projectSites, $scope.getSitesForProject)
 
     teerCarPromise.then(function success(newCar) {
-      $scope.teerCars[newCar.carpoolSite_id] = newCar
+      $scope.teerCars[newCar.teerCar_id] = newCar
       $log.log("New car: " + dump($scope.teerCars[newCar.carpoolSite_id], 'none'))
     })
   }

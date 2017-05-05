@@ -2,7 +2,7 @@ var app = angular.module('adminApp')
 
 app.factory('addTeerCarModal', ['$log', '$q', '$mdDialog', '$http', function($log, $q, $mdDialog, $http) {
 
-  return function (myCarpoolSites, myProjectSites, myGetSitesForProject) {
+  return function (myCarpoolSites, myProjectSites, myGetSitesForProject, myCarpoolSite) {
 
     var defer = $q.defer()
 
@@ -13,7 +13,8 @@ app.factory('addTeerCarModal', ['$log', '$q', '$mdDialog', '$http', function($lo
       locals: {
         carpoolSites: myCarpoolSites,
         projectSites: myProjectSites,
-        getSitesForProject: myGetSitesForProject
+        getSitesForProject: myGetSitesForProject,
+        carpoolSite: (myCarpoolSite) ? myCarpoolSite : null
       }
     }).then(function(newCar) {
       var newCarToPass = JSON.stringify(newCar)
@@ -38,7 +39,7 @@ app.factory('addTeerCarModal', ['$log', '$q', '$mdDialog', '$http', function($lo
   }
 }])
 
-app.controller('AddTeerCarModalController', ['$scope', '$log', '$mdDialog', 'carpoolSites', 'projectSites', 'getSitesForProject', function($scope, $log, $mdDialog, myCarpoolSites, myProjectSites, myGetSitesForProject) {
+app.controller('AddTeerCarModalController', ['$scope', '$log', '$mdDialog', 'carpoolSites', 'projectSites', 'getSitesForProject', 'carpoolSite', function($scope, $log, $mdDialog, myCarpoolSites, myProjectSites, myGetSitesForProject, myCarpoolSite) {
 
     $scope.carpoolSites = myCarpoolSites
     $scope.projectSites = myProjectSites
@@ -49,6 +50,7 @@ app.controller('AddTeerCarModalController', ['$scope', '$log', '$mdDialog', 'car
     $scope.getSitesForProject = myGetSitesForProject
     // Initialize object for form elements to bind to
     $scope.car = {}
+    $scope.car['carpoolSite_id'] = myCarpoolSite
 
     $scope.submit = function() {
       $log.log('submit ran!')
