@@ -1,0 +1,121 @@
+<md-content class='md-padding' layout="row" layout-wrap layout-align="center">
+
+    <md-card ng-repeat="(site, info) in carpoolSites" style="width: 300px" layout="column">
+      <md-toolbar class="md-primary">
+        <md-card-header>
+          <md-card-header-text>
+            <md-title class="md-title">{{ info.name }}</md-title>
+          </md-card-header-text>
+        </md-card-header>
+      </md-toolbar>
+      <md-card-title style="padding-top:0; padding-bottom:0" flex="20">
+        <div layout="row" flex="100" layout-margin>
+          <div flex></div>
+          <div>
+            <md-card-title-text class="carpool-card-counter-text">
+              <md-headline class="md-title">{{info.assignedCrew.length}}</md-headline>
+              <md-subhead>Crew</md-subhead>
+            </md-card-title-text>
+          </div>
+          <div flex></div>
+          <div>
+            <md-card-title-text class="carpool-card-counter-text">
+              <md-headline class="md-title">##</md-headline>
+              <md-subhead>Seatbelts</md-subhead>
+            </md-card-title-text>
+          </div>
+          <div flex></div>
+        </div>
+      </md-card-title>
+      <md-card-content>
+        <md-list class="carpool-panel-list">
+          <md-list-item class="md-2-line carpool-card-crew-list-item" ng-repeat="personId in info.assignedCrew" layout="row" layout-align="center center">
+            <md-icon class="md-18" style="margin-right: 12px; margin: auto !important" ng-click="removeCrew(personId, crew[personId].firstName, crew[personId].carpoolSite_id)">{{(crew[personId].hasPermanentAssignment == 1) ? "lock" : "clear"}}</md-icon>
+            <div class="md-list-item-text">
+              <h3>{{ crew[personId].firstName }} {{ crew[personId].lastName }}</h3>
+              <h4>{{ projectSites[crew[personId].assignedToSite_id].name }}</h4>
+            </div>
+            <div class="md-list-item-text" layout="row" layout-align="end start" ng-show="crew[personId].numSeatbelts > 0">
+              <md-icon class="md-18" style="margin-right: 5px;">drive_eta</md-icon>
+              <h4>{{ crew[personId].numSeatbelts }}</h4>
+            </div>
+          </md-list-item>
+        </md-list>
+
+        <div ng-show="carpoolSites[site].assignedVans.length > 0">
+          <md-divider></md-divider>
+          <md-subheader>Vans</md-subheader>
+        </div>
+
+        <md-list class="carpool-panel-list">
+          <md-list-item class="md-2-line carpool-card-teerCar-list-item" ng-repeat="vanId in carpoolSites[site].assignedVans" layout="row" layout-align="center center">
+            <md-button class="md-icon-button" ng-click="removeVan(vanId, site)" style="margin: auto !important">
+              <md-icon style="margin-right: 12px; margin: auto !important">close</md-icon>
+            </md-button>
+            <div class="md-list-item-text">
+              <h3>{{ vans[vanId].name }}</h3>
+            </div>
+            <div class="md-list-item-text" layout="row">
+              <h3>{{ vans[vanId].numSeatbelts }}</h3>
+            </div>
+          </md-list-item>
+        </md-list>
+
+        <div ng-show="carpoolSites[site].assignedTeerCars.length > 0">
+          <md-divider></md-divider>
+          <md-subheader>Volunteer Cars</md-subheader>
+        </div>
+
+        <md-list class="carpool-panel-list">
+          <md-list-item class="md-2-line carpool-card-teerCar-list-item" ng-repeat="teerCarId in carpoolSites[site].assignedTeerCars" layout="row" layout-align="center center">
+            <md-button class="md-icon-button" ng-click="removeTeerCar(teerCarId, site)" style="margin: auto !important">
+              <md-icon style="margin-right: 12px; margin: auto !important">close</md-icon>
+            </md-button>
+            <div class="md-list-item-text">
+              <h3>{{ projectSites[teerCars[teerCarId].assignedToSite].name }}</h3>
+            </div>
+            <div class="md-list-item-text">
+              <h3>{{ teerCars[teerCarId].assignedNumPassengers }}</h3>
+            </div>
+          </md-list-item>
+        </md-list>
+
+      </md-card-content>
+      <div flex></div>
+      <md-card-actions layout="row" layout-align="end end">
+        <div id="speedDialContainer" layout="row" layout-align="end" style="position:relative; width:100%; height:50px;">
+          <md-fab-speed-dial flex class="md-fling md-secondary md-fab-bottom-right" md-direction="up" md-open="speedDialIsOpen" style="height:50px; width:50; padding-top: 12px" ng-mouseenter="speedDialIsOpen=true" ng-mouseleave="speedDialIsOpen=false" ng-cloak>
+             <md-fab-trigger flex><!--ng-click="toggleOpen()"-->
+               <md-button aria-label="menu" class="md-fab md-mini md-primary" style="z-index:100 !important" ng-click="(speedDialIsOpen) ? addCrew(site):''">
+                  <md-icon class="material-icons" ng-show="!speedDialIsOpen">add</md-icon>
+                  <md-tooltip md-direction="right" >Add Crew</md-tooltip>
+                  <md-icon ng-show="speedDialIsOpen">person</md-icon>
+               </md-button>
+             </md-fab-trigger>
+             <md-fab-actions>
+               <div>
+                 <md-button class="md-fab md-raised md-mini md-primary md-hue-1 speedDialButton" aria-label="Add Van" ng-click="addVan(site)">
+                   <md-tooltip md-direction="right">Add Van</md-tooltip>
+                   <md-icon>drive_eta</md-icon>
+                 </md-button>
+               </div>
+               <div>
+                 <md-button class="md-fab md-raised md-mini md-primary md-hue-1 speedDialButton" aria-label="Add Volunteer Car" ng-click="addTeerCar(site)">
+                   <md-tooltip md-direction="right">Add Volunteer Car</md-tooltip>
+                   <md-icon>directions_car</md-icon>
+                 </md-button>
+               </div>
+               <div>
+                 <md-button class="md-fab md-raised md-mini md-primary md-hue-1 speedDialButton" aria-label="Add Group">
+                   <md-tooltip md-direction="right">Add Group</md-tooltip>
+                   <md-icon>people</md-icon>
+                 </md-button>
+               </div>
+             </md-fab-actions>
+          </md-fab-speed-dial>
+        </div>
+      </md-card-actions>
+    </md-card>
+
+
+</md-content>

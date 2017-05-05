@@ -123,6 +123,13 @@ app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$
 
 }])
 
+
+app.controller('ProjectPanelController', ['$scope', '$log', '$q', '$mdToast', '$mdDialog', 'getProjectSites', 'getCrew', 'addCrewPanelModal', 'addVanPanelModal', 'addTeerCarModal', 'updateVan', function($scope, $log, $q, $mdToast, $mdDialog, getProjectSites, getCrew, addCrewPanelModal, addVanPanelModal, addTeerCarModal, updateVan) {
+
+
+
+}])
+
 app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRipple', '$mdToast', 'getProjectSites', 'toggleSiteActive', 'addProjectSiteModal', function($scope, $log, $mdInkRipple, $mdToast, getProjectSites, toggleSiteActive, addProjectSiteModal) {
 
   $scope.toggleActive = function(siteId) {

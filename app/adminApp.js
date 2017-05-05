@@ -16,6 +16,12 @@ app.config(function($stateProvider) {
         controller: 'CarpoolPanelController',
         data: {requireLogin: true}
       })
+      .state('logistics.projectSitesPanel', {
+        url: '/projectPanel',
+        templateUrl: 'app/views/logistics/projectPanel.html',
+        controller: 'ProjectPanelController',
+        data: {requireLogin: true}
+      })
       .state('logistics.projectSiteSelection', {
         url: '/siteSelect',
         templateUrl: 'app/views/logistics/siteSelect.html',
