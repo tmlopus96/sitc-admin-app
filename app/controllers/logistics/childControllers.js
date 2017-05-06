@@ -124,9 +124,38 @@ app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$
 }])
 
 
-app.controller('ProjectPanelController', ['$scope', '$log', '$q', '$mdToast', '$mdDialog', 'getProjectSites', 'getCrew', 'addCrewPanelModal', 'addVanPanelModal', 'addTeerCarModal', 'updateVan', function($scope, $log, $q, $mdToast, $mdDialog, getProjectSites, getCrew, addCrewPanelModal, addVanPanelModal, addTeerCarModal, updateVan) {
+app.controller('ProjectPanelController', ['$scope', '$log', '$q', '$mdToast', '$mdDialog', 'getProjectSites', 'getCrew', 'addCrewProjectPanelModal', 'addVanPanelModal', 'addTeerCarModal', 'updateActiveCrew', 'updateVan', function($scope, $log, $q, $mdToast, $mdDialog, getProjectSites, getCrew, addCrewProjectPanelModal, addVanPanelModal, addTeerCarModal, updateActiveCrew, updateVan) {
 
+  $scope.addCrew = function(projectSite) {
+    addCrewProjectPanelModal(projectSite, $scope.crew, $scope.carpoolSites, $scope.projectSites).then(function success (personId) {
+        updateActiveCrew(personId, 1, {'site':projectSite}).then(function success (response) {
+            $log.log('updateActiveCrew response: ' + dump(response, 'none'))
+            var personId = response.config.params.personId
+            // In case this person is already on logistics for another carpool site, delete them from that site's array
+            if ($scope.crew[personId].assignedToSite_id) {
+              var index = $scope.projectSites[$scope.crew[personId].assignedToSite_id].assignedCrew.indexOf(personId)
+              $scope.projectSites[$scope.crew[personId].assignedToSite_id].assignedCrew.splice(index, 1)
+            }
 
+            // If this person is not already in $scope.activeCrew, push them to it
+            var activeIndex = $scope.activeCrew.indexOf(personId)
+            if (activeIndex == -1) {
+              $scope.activeCrew.push(personId)
+            }
+
+            // If this person is not already in their carpool site's assignedCrew[], push them to it
+            var assignedIndex = $scope.carpoolSites[$scope.crew[personId].carpoolSite_id].assignedCrew.indexOf(personId)
+            if (assignedIndex == -1) {
+              $scope.$scope.carpoolSites[$scope.crew[personId].carpoolSite_id].assignedCrew.push(personId)
+            }
+
+            $scope.crew[personId].assignedToSite_id= projectSite
+            $scope.crew[personId].isOnLogistics = 1
+            $scope.projectSites[projectSite].assignedCrew.push(personId)
+            $log.log('AssignedCrew: ' + dump($scope.projectSites[projectSite].assignedCrew, 'none'))
+        })
+    })
+  }
 
 }])
 

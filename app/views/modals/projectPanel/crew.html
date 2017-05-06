@@ -1,0 +1,85 @@
+<md-dialog flex-gt-sm="70" flex-sm="85" flex-xs="95">
+  <md-dialog-content>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Add Crew to {{ projectSites[myProjectSite].name }}</h2>
+      </div>
+    </md-toolbar>
+
+    <div id="carpoolPanelModalContent">
+      <md-autocomplete
+        md-selected-item="selectedItem"
+        md-search-text="searchText"
+        md-items="person in filterSearch(searchText)"
+        md-no-cache="true"
+        md-item-text="person.name"
+        md-selected-item-change="returnSelectedPerson(person.person_id)"
+        placeholder="Search"
+        style="margin-top:15px;">
+        <md-item-template>
+          <div style="height:50px;" layout="row">
+            <md-button class="md-icon-button">
+              <md-icon class="sitc-icon-">{{ person.assignedProject }}</md-icon>
+            </md-button>
+            <div>
+              <div><span class="md-subhead" style="font-weight:500">{{ person.firstName + ' ' + person.lastName }}</span></div>
+              <div ng-show="person.assignedToSite_id != null && person.assignedToSite_id != ''"><span class="md-subhead">Already assigned to: </span><span class="md-subhead" style="font-weight:500">{{ projectSites[person.assignedToSite_id].name }}</span></div>
+            </div>
+          </div>
+        </md-item-template>
+      </md-autocomplete>
+
+      <md-subheader>Not assigned to project site</md-subheader>
+      <md-list class="project-panel-list">
+        <md-list-item class="md-2-line project-card-crew-list-item" ng-repeat="personId in noSiteAssignment" layout="row" ng-click="returnSelectedPerson(personId)">
+          <div class="md-list-item-text">
+            <h3>{{ crew[personId].firstName }} {{ crew[personId].lastName}}</h3>
+            <h4>{{ carpoolSites[crew[personId].carpoolSite_id].name }}</h4>
+          </div>
+          <div class="md-list-item-text" layout="row" ng-hide="crew[personId].numSeatbelts <= 0">
+            <md-icon style="margin-right:5px; margin-left: 0">drive_eta</md-icon>
+            <h3>{{ crew[personId].numSeatbelts }}</h3>
+          </div>
+          <span flex></span>
+        </md-list-item>
+      </md-list>
+
+      <md-divider></md-divider>
+      <md-subheader>Already assigned to project site</md-subheader>
+
+      <md-list class="" style="padding-left: 15px">
+        <md-list-item class="md-3-line project-card-crew-list-item" ng-repeat="personId in hasSiteAssignment" layout="row" ng-click="returnSelectedPerson(personId)">
+          <div class="md-list-item-text">
+            <h3>{{ crew[personId].firstName }} {{ crew[personId].lastName}}</h3>
+            <h4>{{ carpoolSites[crew[personId].carpoolSite_id].name }}</h4>
+            <h4>Assigned to <span style="font-weight:bold">{{ projectSites[crew[personId].assignedToSite_id].name }}</span></h4>
+          </div>
+          <div class="md-list-item-text" layout="row" ng-hide="crew[personId].numSeatbelts <= 0">
+            <md-icon style="margin-right:5px; margin-left: 0">drive_eta</md-icon>
+            <h3>{{ crew[personId].numSeatbelts }}</h3>
+          </div>
+          <span flex></span>
+        </md-list-item>
+      </md-list>
+
+      <md-divider></md-divider>
+      <md-subheader>Not on logistics</md-subheader>
+
+      <md-list class="project-panel-list">
+        <md-list-item class="md-2-line project-card-crew-list-item" ng-repeat="personId in notOnLogistics" layout="row" ng-click="returnSelectedPerson(personId)">
+          <div class="md-list-item-text">
+            <h3>{{ crew[personId].firstName }} {{ crew[personId].lastName}}</h3>
+            <h4>{{ carpoolSites[crew[personId].carpoolSite_id].name }}</h4>
+          </div>
+          <div class="md-list-item-text" layout="row" ng-hide="crew[personId].numSeatbelts <= 0">
+            <md-icon style="margin-right:5px; margin-left:0">drive_eta</md-icon>
+            <h3>{{ crew[personId].numSeatbelts }}</h3>
+          </div>
+          <span flex></span>
+        </md-list-item>
+      </md-list>
+
+
+    </div> <!-- end #CarpoolPanelModalContent -->
+  </md-dialog-content>
+</md-dialog>

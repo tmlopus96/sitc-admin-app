@@ -12,6 +12,7 @@
   $queryFields = ["person_id"];
   $queryValues = [$personId];
   $updateClauses = [];
+  
   if (isset($_GET["isActive"])) {
     $isActive = sanitize($_GET["isActive"]);
     array_push($queryFields, 'isOnLogistics');

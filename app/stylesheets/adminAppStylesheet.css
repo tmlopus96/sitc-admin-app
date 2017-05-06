@@ -1,9 +1,9 @@
-.carpool-card-counter-text {
+.carpool-card-counter-text, .project-card-counter-text {
   padding-bottom: 0;
   padding-top: 0;
   text-align: center; }
 
-.carpool-card-crew-list-item, .carpool-card-teerCar-list-item {
+.carpool-card-crew-list-item, .carpool-card-teerCar-list-item, .project-card-teerCar-list-item, .project-card-crew-list-item {
   padding-left: 0 !important;
   padding-right: 0 !important; }
 
@@ -35,12 +35,59 @@ md-tooltip {
 .active-crew-button {
   color: #26c6da; }
 
-md-list.carpool-panel-list md-list-item {
+md-list.carpool-panel-list md-list-item, md-list.project-panel-list md-list-item {
   height: 30 !important;
   min-height: 55 !important; }
 
 .md-subheader-inner {
   padding-bottom: 0 !important; }
+
+.carpool-card-counter-text, .project-card-counter-text {
+  padding-bottom: 0;
+  padding-top: 0;
+  text-align: center; }
+
+.carpool-card-crew-list-item, .carpool-card-teerCar-list-item, .project-card-teerCar-list-item, .project-card-crew-list-item {
+  padding-left: 0 !important;
+  padding-right: 0 !important; }
+
+md-tooltip {
+  visibility: visible !important; }
+
+.md-fab-action-item {
+  padding-bottom: 7px; }
+
+.speedDialButton {
+  height: auto !important;
+  width: auto !important;
+  max-width: 36px !important;
+  box-shadow: 0 0 0 0 !important; }
+
+#speedDialTriggerButton {
+  background-color: #00897B; }
+
+.md-fab {
+  margin-right: 0; }
+
+/* Modals */
+#carpoolPanelModalContent {
+  padding: 10px; }
+
+.md-autocomplete-suggestions li {
+  height: auto; }
+
+.active-crew-button {
+  color: #26c6da; }
+
+md-list.carpool-panel-list md-list-item, md-list.project-panel-list md-list-item {
+  height: 30 !important;
+  min-height: 55 !important; }
+
+.md-subheader-inner {
+  padding-bottom: 0 !important; }
+
+.project-panel-list {
+  padding-left: 15px; }
 
 @media only screen and (min-width: 768px) {
   #mainView {

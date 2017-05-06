@@ -1,0 +1,18 @@
+@import 'carpoolPanel';
+
+.project-card-counter-text {
+  @extend .carpool-card-counter-text;
+}
+
+.project-panel-list {
+  @extend .carpool-panel-list;
+  padding-left: 15px;
+}
+
+.project-card-crew-list-item {
+  @extend .carpool-card-crew-list-item;
+}
+
+.project-card-teerCar-list-item {
+  @extend .carpool-card-teerCar-list-item;
+}
