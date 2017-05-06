@@ -41,6 +41,13 @@
     array_push($updateClauses, "carpoolSite='" . $carpoolSite . "'");
   }
 
+  if (isset($_GET["assignedToSite"])) {
+    $assignedToSite = $_GET["assignedToSite"];
+    array_push($queryFields, 'assignedToSite');
+    array_push($queryValues, $assignedToSite);
+    array_push($updateClauses, "assignedToSite='" . $assignedToSite . "'");
+  }
+
   $fieldsStr = join(', ', $queryFields);
   $valuesStr = '"' . join('", "', $queryValues) . '"';
   $updateStr = join(', ', $updateClauses);

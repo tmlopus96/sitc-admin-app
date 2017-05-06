@@ -30,12 +30,12 @@
       <md-card-content>
         <md-list class="project-panel-list">
           <md-list-item class="md-2-line project-card-crew-list-item" ng-repeat="personId in info.assignedCrew" layout="row" layout-align="center center">
-            <md-button class="md-icon-button" ng-click="removeCrew(personId, crew[personId].firstName, crew[personId].carpoolSite_id)" style="margin: auto !important">
+            <md-button class="md-icon-button" ng-click="removeCrew(personId, crew[personId].firstName, site)" style="margin: auto !important">
               <md-icon class="md-18" style="margin-right: 12px; margin: auto !important">{{(crew[personId].hasPermanentAssignment == 1) ? "lock" : "clear"}}</md-icon>
             </md-button>
             <div class="md-list-item-text">
               <h3>{{ crew[personId].firstName }} {{ crew[personId].lastName }}</h3>
-              <h4>{{ projectSites[crew[personId].assignedToSite_id].name }}</h4>
+              <h4>{{ carpoolSites[crew[personId].carpoolSite_id].name }}</h4>
             </div>
             <div class="md-list-item-text" layout="row" layout-align="end start" ng-show="crew[personId].numSeatbelts > 0">
               <md-icon class="md-18" style="margin-right: 5px;">drive_eta</md-icon>
@@ -74,7 +74,7 @@
               <md-icon style="margin-right: 12px; margin: auto !important">close</md-icon>
             </md-button>
             <div class="md-list-item-text">
-              <h3>{{ projectSites[teerCars[teerCarId].assignedToSite].name }}</h3>
+              <h3>{{ carpoolSites[teerCars[teerCarId].carpoolSite_id].name }}</h3>
             </div>
             <div class="md-list-item-text">
               <h3>{{ teerCars[teerCarId].assignedNumPassengers }}</h3>

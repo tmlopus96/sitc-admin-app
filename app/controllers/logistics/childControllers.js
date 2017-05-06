@@ -105,7 +105,7 @@ app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$
     updateVan(vanId, 0).then(function success () {
       var index = $scope.carpoolSites[carpoolSite].assignedVans.indexOf(vanId)
       $scope.carpoolSites[carpoolSite].assignedVans.splice(index, 1)
-      delete $scope.teerCars[vanId]
+      // delete $scope.vans[vanId]
     }, function failure () {
       // error handling
     })
@@ -124,11 +124,20 @@ app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$
 }])
 
 
-app.controller('ProjectPanelController', ['$scope', '$log', '$q', '$mdToast', '$mdDialog', 'getProjectSites', 'getCrew', 'addCrewProjectPanelModal', 'addVanPanelModal', 'addTeerCarModal', 'updateActiveCrew', 'updateVan', function($scope, $log, $q, $mdToast, $mdDialog, getProjectSites, getCrew, addCrewProjectPanelModal, addVanPanelModal, addTeerCarModal, updateActiveCrew, updateVan) {
+app.controller('ProjectPanelController', ['$scope', '$log', '$q', '$mdToast', '$mdDialog', 'getProjectSites', 'getCrew', 'addCrewProjectPanelModal', 'addVanProjectPanelModal', 'addTeerCarModal', 'updateActiveCrew', 'updateVan', function($scope, $log, $q, $mdToast, $mdDialog, getProjectSites, getCrew, addCrewProjectPanelModal, addVanProjectPanelModal, addTeerCarModal, updateActiveCrew, updateVan) {
 
   $scope.addCrew = function(projectSite) {
     addCrewProjectPanelModal(projectSite, $scope.crew, $scope.carpoolSites, $scope.projectSites).then(function success (personId) {
-        updateActiveCrew(personId, 1, {'site':projectSite}).then(function success (response) {
+        var params = {
+          'site' : projectSite
+        }
+
+        // If this person is being put on logistics, their carpoolSite_id may not be set yet, so set it to their primary carpool site
+        if ($scope.crew[personId].carpoolSite_id == null || $scope.crew[personId].carpoolSite_id == '') {
+          params['carpoolSite_id'] = $scope.crew[personId].primaryCarpool_id
+          $scope.crew[personId].carpoolSite_id = $scope.crew[personId].primaryCarpool_id
+        }
+        updateActiveCrew(personId, 1, params).then(function success (response) {
             $log.log('updateActiveCrew response: ' + dump(response, 'none'))
             var personId = response.config.params.personId
             // In case this person is already on logistics for another carpool site, delete them from that site's array
@@ -146,7 +155,7 @@ app.controller('ProjectPanelController', ['$scope', '$log', '$q', '$mdToast', '$
             // If this person is not already in their carpool site's assignedCrew[], push them to it
             var assignedIndex = $scope.carpoolSites[$scope.crew[personId].carpoolSite_id].assignedCrew.indexOf(personId)
             if (assignedIndex == -1) {
-              $scope.$scope.carpoolSites[$scope.crew[personId].carpoolSite_id].assignedCrew.push(personId)
+              $scope.carpoolSites[$scope.crew[personId].carpoolSite_id].assignedCrew.push(personId)
             }
 
             $scope.crew[personId].assignedToSite_id= projectSite
@@ -154,6 +163,79 @@ app.controller('ProjectPanelController', ['$scope', '$log', '$q', '$mdToast', '$
             $scope.projectSites[projectSite].assignedCrew.push(personId)
             $log.log('AssignedCrew: ' + dump($scope.projectSites[projectSite].assignedCrew, 'none'))
         })
+    })
+  }
+
+  $scope.removeCrew = function (withId, firstName, projectSite) {
+    var defer = $q.defer()
+    $log.log("project site: " + projectSite)
+
+    if ($scope.crew[withId].hasPermanentAssignment == 1) {
+      var confirm = $mdDialog.confirm()
+          .title(`${firstName} is permanently assigned to ${$scope.projectSites[projectSite].name}.`)
+          .textContent('Would you still like to remove them from this site for today?')
+          .ariaLabel('Remove from permanent assignement')
+          .ok('Remove anyway')
+          .cancel('Cancel');
+
+      $mdDialog.show(confirm).then(function yes () {
+        defer.resolve()
+      }, function no () {
+        defer.reject()
+      })
+    }
+    else {
+      defer.resolve()
+    }
+
+    defer.promise.then(function yes() {
+      updateActiveCrew(withId, 1, {'site':''}).then(function success() {
+        $scope.crew[withId].assignedToSite_id = ''
+
+        var index = $scope.projectSites[projectSite].assignedCrew.indexOf(withId)
+        $scope.projectSites[projectSite].assignedCrew.splice(index, 1)
+
+        index = $scope.activeCrew.indexOf(withId)
+        $scope.activeCrew.splice(index)
+      })
+    }, function no() {
+      return
+    })
+  }
+
+  $scope.addVan = function (projectSite) {
+    addVanProjectPanelModal(projectSite, $scope.vans, $scope.carpoolSites, $scope.projectSites).then(function success (vanId) {
+        updateVan(vanId, 1, {'assignedToSite':projectSite}).then(function success(response) {
+          $log.log("updateVan response: " + dump(response, 'none'))
+          // remove this van from its current carpool site, if it has one
+          if ($scope.vans[vanId].assignedToSite != null && $scope.vans[vanId].assignedToSite != '') {
+            var index = $scope.projectSites[$scope.vans[vanId].assignedToSite].assignedVans.indexOf(vanId)
+            $scope.projectSites[$scope.vans[vanId].assignedToSite].assignedVans.splice(index, 1)
+          }
+
+          // if this van is just being added to logistics, add it to its carpool site's assignedVans[]
+          if ($scope.vans[vanId].isOnLogistics != 1) {
+            if ($scope.vans[vanId].carpoolSite) {
+              $scope.carpoolSites[$scope.vans[vanId].carpoolSite].assignedVans.push(vanId)
+            }
+          }
+
+          $scope.vans[vanId].assignedToSite = projectSite
+          $scope.vans[vanId].isOnLogistics = 1
+          $scope.projectSites[$scope.vans[vanId].assignedToSite].assignedVans.push(vanId)
+        }, function failure() {
+          // error handling
+      })
+    })
+  }
+
+  $scope.removeVan = function (vanId, projectSite) {
+    updateVan(vanId, 1, {'assignedToSite':''}).then(function success () {
+      var index = $scope.projectSites[projectSite].assignedVans.indexOf(vanId)
+      $scope.projectSites[projectSite].assignedVans.splice(index, 1)
+      $scope.vans[vanId].assignedToSite = ''
+    }, function failure () {
+      // error handling
     })
   }
 
