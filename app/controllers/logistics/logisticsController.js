@@ -22,9 +22,11 @@ app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites'
       $scope.carpoolSites[siteId]["assignedTeerCars"] = []
     })
   }).then(function () {
+    $log.log("Loading Project Sites!")
+    var defer = $q.defer()
+    
     // load project sites
     getProjectSites().then(function(sites_result) {
-      var defer = $q.defer()
 
       $scope.projectSites = sites_result
       Object.keys($scope.projectSites).forEach(function(siteId) {
@@ -45,9 +47,12 @@ app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites'
         }
       })
 
-      return defer.promise
     })
+    return defer.promise
   }).then(function() {
+    $log.log("Loading Crew!")
+    var defer = $q.defer()
+
     // load crew
     getCrew().then(function(crew_result) {
       $scope.crew = crew_result
@@ -60,14 +65,25 @@ app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites'
             $scope.carpoolSites[$scope.crew[personId].carpoolSite_id].assignedCrew.push(personId)
           }
           if ($scope.crew[personId].assignedToSite_id != null && $scope.crew[personId].assignedToSite_id != '') {
+            $log.log("personId: " + personId + ", assignedToSite_id: " + $scope.crew[personId].assignedToSite_id)
             $scope.projectSites[$scope.crew[personId].assignedToSite_id].assignedCrew.push(personId)
           }
         } else {
           $scope.crew[personId].isOnLogistics = 0
         }
+
+        // on last iteration of forEach, resolve promise
+        if (Object.keys($scope.crew).indexOf(personId) == Object.keys($scope.crew).length - 1) {
+          $log.log("Resolving crew promise!")
+          defer.resolve()
+        }
       })
     })
+
+    return defer.promise
   }).then(function () {
+    $log.log("Loading Teer Cars!")
+
     // load volunteer cars
     getTeerCars().then(function(teerCars_result) {
       $scope.teerCars = teerCars_result
