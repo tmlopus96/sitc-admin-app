@@ -124,7 +124,7 @@ app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$
 }])
 
 
-app.controller('ProjectPanelController', ['$scope', '$log', '$q', '$mdToast', '$mdDialog', 'getProjectSites', 'getCrew', 'addCrewProjectPanelModal', 'addVanProjectPanelModal', 'addTeerCarModal', 'updateActiveCrew', 'updateVan', function($scope, $log, $q, $mdToast, $mdDialog, getProjectSites, getCrew, addCrewProjectPanelModal, addVanProjectPanelModal, addTeerCarModal, updateActiveCrew, updateVan) {
+app.controller('ProjectPanelController', ['$scope', '$log', '$q', '$mdToast', '$mdDialog', 'getProjectSites', 'getCrew', 'addCrewProjectPanelModal', 'addVanProjectPanelModal', 'addTeerCarProjectPanelModal', 'updateActiveCrew', 'updateVan', 'updateActiveTeerCar', function($scope, $log, $q, $mdToast, $mdDialog, getProjectSites, getCrew, addCrewProjectPanelModal, addVanProjectPanelModal, addTeerCarProjectPanelModal, updateActiveCrew, updateVan, updateActiveTeerCar) {
 
   $scope.addCrew = function(projectSite) {
     addCrewProjectPanelModal(projectSite, $scope.crew, $scope.carpoolSites, $scope.projectSites).then(function success (personId) {
@@ -234,6 +234,44 @@ app.controller('ProjectPanelController', ['$scope', '$log', '$q', '$mdToast', '$
       var index = $scope.projectSites[projectSite].assignedVans.indexOf(vanId)
       $scope.projectSites[projectSite].assignedVans.splice(index, 1)
       $scope.vans[vanId].assignedToSite = ''
+    }, function failure () {
+      // error handling
+    })
+  }
+
+  $scope.addTeerCar = function (projectSite) {
+    addTeerCarProjectPanelModal(projectSite, $scope.teerCars, $scope.carpoolSites, $scope.projectSites).then(function success (teerCarId) {
+        var params = {
+          'assignedToSite': projectSite
+        }
+        updateActiveTeerCar(teerCarId, params).then(function success() {
+          if ($scope.teerCars[teerCarId].assignedToSite != null && $scope.teerCars[teerCarId].assignedToSite != '') {
+            if ($scope.projectSites[$scope.teerCars[teerCarId].assignedToSite].assignedTeerCars) {
+                var index = $scope.projectSites[$scope.teerCars[teerCarId].assignedToSite].assignedTeerCars.indexOf(teerCarId)
+                $scope.projectSites[$scope.teerCars[teerCarId].assignedToSite].assignedTeerCars.splice(index, 1)
+            }
+          }
+          $scope.teerCars[teerCarId].assignedToSite = projectSite
+          $scope.projectSites[projectSite].assignedTeerCars.push(teerCarId)
+        }, function failure() {
+          // error handling
+        })
+    })
+  }
+
+  $scope.removeTeerCar = function (teerCarId, projectSite) {
+    var params = {
+      'assignedToSite': ''
+    }
+    updateActiveTeerCar(teerCarId, params).then(function success () {
+      if ($scope.teerCars[teerCarId].assignedToSite != null && $scope.teerCars[teerCarId].assignedToSite != '') {
+        if ($scope.projectSites[$scope.teerCars[teerCarId].assignedToSite].assignedTeerCars) {
+            var index = $scope.projectSites[$scope.teerCars[teerCarId].assignedToSite].assignedTeerCars.indexOf(teerCarId)
+            $scope.projectSites[$scope.teerCars[teerCarId].assignedToSite].assignedTeerCars.splice(index, 1)
+        }
+      }
+
+      $scope.teerCars[teerCarId].assignedToSite = ''
     }, function failure () {
       // error handling
     })

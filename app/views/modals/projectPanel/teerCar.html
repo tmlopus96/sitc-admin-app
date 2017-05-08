@@ -1,1 +1,46 @@
-<h1>I am the TeerCar template!</h1>
+<md-dialog flex-gt-sm="70" flex-sm="85" flex-xs="95">
+  <md-dialog-content>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Add Crew to {{ projectSites[myProjectSite].name }}</h2>
+      </div>
+    </md-toolbar>
+
+    <div id="carpoolPanelModalContent">
+
+      <md-subheader ng-hide="noSiteAssignment.length <= 0">Not assigned to project site</md-subheader>
+      <md-list class="project-panel-list">
+        <md-list-item class="md-2-line project-card-crew-list-item" ng-repeat="teerCarId in noSiteAssignment" layout="row" ng-click="returnSelectedTeerCar(teerCarId)">
+          <div class="md-list-item-text">
+            <h3>{{ carpoolSites[teerCars[teerCarId].carpoolSite_id].name }}</h3>
+          </div>
+          <div class="md-list-item-text" layout="row" ng-hide="teerCars[teerCarId].assignedNumPassengers <= 0">
+            <md-icon style="margin-right:5px; margin-left: 0">drive_eta</md-icon>
+            <h3>{{ teerCars[teerCarId].assignedNumPassengers }}</h3>
+          </div>
+          <span flex></span>
+        </md-list-item>
+      </md-list>
+
+      <md-divider ng-hide="noSiteAssignment.length <= 0 || hasSiteAssignment.length <= 0"></md-divider>
+      <md-subheader ng-hide="hasSiteAssignment.length <= 0">Already assigned to project site</md-subheader>
+
+      <md-list class="" style="padding-left: 15px">
+        <md-list-item class="md-3-line project-card-crew-list-item" ng-repeat="teerCarId in hasSiteAssignment" layout="row" ng-click="returnSelectedTeerCar(teerCarId)">
+          <div class="md-list-item-text">
+            <h3>{{ carpoolSites[teerCars[teerCarId].carpoolSite_id].name }}</h3>
+            <h4>{{ carpoolSites[teerCars[teerCarId].carpoolSite].name }}</h4>
+            <h4>Assigned to <span style="font-weight:bold">{{ projectSites[teerCars[teerCarId].assignedToSite].name }}</span></h4>
+          </div>
+          <div class="md-list-item-text" layout="row" ng-hide="teerCars[teerCarId].assignedNumPassengers <= 0">
+            <md-icon style="margin-right:5px; margin-left: 0">drive_eta</md-icon>
+            <h3>{{ teerCars[teerCarId].assignedNumPassengers }}</h3>
+          </div>
+          <span flex></span>
+        </md-list-item>
+      </md-list>
+
+
+    </div> <!-- end #CarpoolPanelModalContent -->
+  </md-dialog-content>
+</md-dialog>
