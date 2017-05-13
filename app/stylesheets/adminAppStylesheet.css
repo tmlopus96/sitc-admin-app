@@ -89,6 +89,71 @@ md-list.carpool-panel-list md-list-item, md-list.project-panel-list md-list-item
 .project-panel-list {
   padding-left: 15px; }
 
+.md-subheader {
+  background-color: transparent; }
+
+/* Have to set height explicity on ui-view
+to prevent collapsing during animation*/
+.ui-view-container {
+  position: relative; }
+
+.slide.ng-enter, .slide.ng-leave {
+  position: absolute !important;
+  display: inline;
+  left: 0;
+  right: 0; }
+
+#bodyContent.ng-enter, #bodyContent.ng-leave, .personsList.ng-enter, .personsList.ng-leave {
+  display: inline;
+  position: absolute; }
+
+#bodyContent.ng-enter-active, #bodyContent.ng-leave-active {
+  display: block; }
+
+@-webkit-keyframes slideout-to-left {
+  0% {
+    -webkit-transform: translate3d(0px, 0, 0);
+    opacity: 1; }
+  100% {
+    -webkit-transform: translate3d(-1000px, 0, 0);
+    opacity: 0; } }
+@-webkit-keyframes slidein-from-right {
+  0% {
+    -webkit-transform: translate3d(1000px, 0, 0);
+    opacity: 0; }
+  100% {
+    -webkit-transform: translate3d(0px, 0, 0);
+    opacity: 1; } }
+@-webkit-keyframes slideout-to-right {
+  0% {
+    -webkit-transform: translate3d(0px, 0, 0);
+    opacity: 1; }
+  100% {
+    -webkit-transform: translate3d(1000px, 0, 0);
+    opacity: 0; } }
+@-webkit-keyframes slidein-from-left {
+  0% {
+    -webkit-transform: translate3d(-1000px, 0, 0);
+    opacity: 0; }
+  100% {
+    -webkit-transform: translate3d(0px, 0, 0);
+    opacity: 1; } }
+.right-to-left.ng-enter {
+  -webkit-animation: slidein-from-left 0.3s ease-in-out;
+  animation: slidein-from-left 0.3s ease-in-out; }
+
+.right-to-left.ng-leave {
+  -webkit-animation: slideout-to-right 0.3s ease-in-out;
+  animation: slideout-to-right 0.3s ease-in-out; }
+
+.left-to-right.ng-enter {
+  -webkit-animation: slidein-from-right 0.3s ease-in-out;
+  animation: slidein-from-right 0.3s ease-in-out; }
+
+.left-to-right.ng-leave {
+  -webkit-animation: slideout-to-left 0.3s ease-in-out;
+  animation: slideout-to-left 0.3s ease-in-out; }
+
 @media only screen and (min-width: 768px) {
   #mainView {
     width: 90%;

@@ -152,6 +152,27 @@ app.factory('getVans', ['$log', '$q', '$http', function($log, $q, $http) {
   }
 }])
 
+app.factory('projectSitesHaveBeenSetToday', ['$log', '$q', '$http', function($log, $q, $http) {
+
+  return function() {
+    var defer = $q.defer()
+
+    $http({
+      method: "GET",
+      url: "app/appServer/projectSitesHaveBeenSetToday.php"
+    }).then(function success(response) {
+      $log.log("Response from projectSitesHaveBeenSetToday: " + dump(response, 'none'))
+      defer.resolve(parseInt(response.data))
+    }, function failure() {
+      // error handling
+    })
+
+    return defer.promise
+  }
+
+
+}])
+
 /*** Setters ***/
 
 app.factory('toggleSiteActive', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http, $mdToast) {

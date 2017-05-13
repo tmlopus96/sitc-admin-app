@@ -1,4 +1,4 @@
-var app = angular.module('adminApp', ['ngMaterial', 'ui.router', 'md.data.table'])
+var app = angular.module('adminApp', ['ngMaterial', 'ui.router', 'md.data.table', 'ngAnimate'])
 
 app.config(function($stateProvider) {
   $stateProvider

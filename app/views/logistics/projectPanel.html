@@ -1,10 +1,10 @@
-<md-content class='md-padding' layout="row" layout-wrap layout-align="center">
+<md-content class='md-padding bodyContent' layout="row" layout-wrap layout-align="center">
 
-    <md-card ng-repeat="(site, info) in projectSites" style="width: 300px" layout="column">
+    <md-card ng-repeat="siteId in activeSites" style="width: 300px" layout="column">
       <md-toolbar class="md-primary">
         <md-card-header>
           <md-card-header-text>
-            <md-title class="md-title">{{ info.name }}</md-title>
+            <md-title class="md-title">{{ projectSites[siteId].name }}</md-title>
           </md-card-header-text>
         </md-card-header>
       </md-toolbar>
@@ -13,15 +13,15 @@
           <div flex></div>
           <div>
             <md-card-title-text class="project-card-counter-text">
-              <md-headline class="md-title">{{info.assignedCrew.length}}</md-headline>
-              <md-subhead>Crew</md-subhead>
+              <md-headline class="md-title">{{projectSites[siteId].assignedCrew.length}}</md-headline>
+              <md-subheader>Crew</md-subheader>
             </md-card-title-text>
           </div>
           <div flex></div>
           <div>
             <md-card-title-text class="project-card-counter-text">
               <md-headline class="md-title">##</md-headline>
-              <md-subhead>Volunteers</md-subhead>
+              <md-subheader>Volunteers</md-subheader>
             </md-card-title-text>
           </div>
           <div flex></div>
@@ -29,7 +29,7 @@
       </md-card-title>
       <md-card-content>
         <md-list class="project-panel-list">
-          <md-list-item class="md-2-line project-card-crew-list-item" ng-repeat="personId in info.assignedCrew" layout="row" layout-align="center center">
+          <md-list-item class="md-2-line project-card-crew-list-item" ng-repeat="personId in projectSites[siteId].assignedCrew" layout="row" layout-align="center center">
             <md-button class="md-icon-button" ng-click="removeCrew(personId, crew[personId].firstName, site)" style="margin: auto !important">
               <md-icon class="md-18" style="margin-right: 12px; margin: auto !important">{{(crew[personId].hasPermanentAssignment == 1) ? "lock" : "clear"}}</md-icon>
             </md-button>
@@ -46,11 +46,11 @@
 
         <div ng-show="projectSites[site].assignedVans.length > 0">
           <md-divider></md-divider>
-          <md-subheader>Vans</md-subheader>
+          <md-subheader class="project-panel-subheader">Vans</md-subheader>
         </div>
 
         <md-list class="project-panel-list">
-          <md-list-item class="md-2-line project-card-teerCar-list-item" ng-repeat="vanId in info.assignedVans" layout="row" layout-align="center center">
+          <md-list-item class="md-2-line project-card-teerCar-list-item" ng-repeat="vanId in projectSites[siteId].assignedVans" layout="row" layout-align="center center">
             <md-button class="md-icon-button" ng-click="removeVan(vanId, site)" style="margin: auto !important">
               <md-icon style="margin-right: 12px; margin: auto !important">close</md-icon>
             </md-button>
@@ -63,13 +63,13 @@
           </md-list-item>
         </md-list>
 
-        <div ng-show="info.assignedTeerCars.length > 0">
-          <md-divider ng-hide="info.assignedCrew.length <= 0 && info.assignedVans.length <= 0"></md-divider>
-          <md-subheader>Volunteer Cars</md-subheader>
+        <div ng-show="projectSites[siteId].assignedTeerCars.length > 0">
+          <md-divider ng-hide="projectSites[siteId].assignedCrew.length <= 0 && projectSites[siteId].assignedVans.length <= 0"></md-divider>
+          <md-subheader class="project-panel-subheader">Volunteer Cars</md-subheader>
         </div>
 
         <md-list class="carpool-panel-list">
-          <md-list-item class="md-2-line carpool-card-teerCar-list-item" ng-repeat="teerCarId in info.assignedTeerCars" layout="row" layout-align="center center">
+          <md-list-item class="md-2-line carpool-card-teerCar-list-item" ng-repeat="teerCarId in projectSites[siteId].assignedTeerCars" layout="row" layout-align="center center">
             <md-button class="md-icon-button" ng-click="removeTeerCar(teerCarId, site)" style="margin: auto !important">
               <md-icon style="margin-right: 12px; margin: auto !important">close</md-icon>
             </md-button>

@@ -1,5 +1,12 @@
 <md-content>
 
-  <div ui-view></div>
+  <md-tabs md-center-tabs md-selected="selectedTab" style="margin-top: 15px" ng-hide="hideTabs">
+    <md-tab id="registered" label="Carpool Sites" ng-click="gotoTab('carpoolPanel')"></md-tab>
+    <md-tab id="checkedIn" label="Project Sites" ng-click="gotoTab('projectPanel')"></md-tab>
+  </md-tabs>
+
+  <div class="ui-view-container">
+    <div ui-view class="slide" ng-class="{'left-to-right': transitionClass == 'left-to-right', 'right-to-left': transitionClass == 'right-to-left'}" layout="row" layout-align="center center"></div>
+  </div>
 
 </md-content>

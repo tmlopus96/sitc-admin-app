@@ -1,7 +1,27 @@
 var app = angular.module('adminApp')
 
-app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites', 'getCarpoolSites', 'getCrew', 'getTeerCars', 'getVans', function($scope, $log, $q, getProjectSites, getCarpoolSites, getCrew, getTeerCars, getVans) {
+app.controller('LogisticsController', ['$scope', '$log', '$state', '$q', 'getProjectSites', 'getCarpoolSites', 'getCrew', 'getTeerCars', 'getVans', 'projectSitesHaveBeenSetToday', function($scope, $log, $state, $q, getProjectSites, getCarpoolSites, getCrew, getTeerCars, getVans, projectSitesHaveBeenSetToday) {
   $log.log('Hello, world! LogisticsController is running!')
+
+  $scope.hideTabs = false
+
+  projectSitesHaveBeenSetToday().then(function(status) {
+    if (!status) {
+      $state.go("logistics.projectSiteSelection")
+      $scope.hideTabs = true
+    }
+    else if ($state.current.name == 'logistics') {
+      $log.log("$state.current.name == logistics; going to carpoolPanel!")
+      $state.go('logistics.carpoolSitesPanel')
+      $scope.selectedTab = 0
+    }
+    else if ($state.current.name == 'logistics.carpoolSitesPanel') {
+      $scope.selectedTab = 0
+    }
+    else if ($state.current.name == 'logistics.projectSitesPanel') {
+      $scope.selectedTab = 1
+    }
+  })
 
   $scope.carpoolSites = {}
   $scope.projectSites = {}
@@ -24,7 +44,7 @@ app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites'
   }).then(function () {
     $log.log("Loading Project Sites!")
     var defer = $q.defer()
-    
+
     // load project sites
     getProjectSites().then(function(sites_result) {
 
@@ -135,6 +155,33 @@ app.controller('LogisticsController', ['$scope', '$log', '$q', 'getProjectSites'
     })
 
     return sitesForThisProject
+  }
+
+  /*
+   * gotoTab
+   * Configures tab changing animation so slide is in the right direction, then goes to new tab's state
+   * Pre: destinationTab is one of the three tabs
+   * Post: animate transition classes are applied, $rootScope.currentState is set, and $state goes to destinationTab
+   */
+  $scope.gotoTab = function(destinationTab) {
+    // promise is used to prevent $state.go() from being called before destinationState is set
+    var defer = $q.defer()
+    $log.log("destinationTab: " + destinationTab)
+
+    if (destinationTab == 'carpoolPanel') {
+      $scope.transitionClass = 'left-to-right'
+      var destinationState = 'logistics.carpoolSitesPanel'
+      defer.resolve()
+    }
+    else {
+      $scope.transitionClass = 'right-to-left'
+      var destinationState = 'logistics.projectSitesPanel'
+      defer.resolve()
+    }
+
+    defer.promise.then(function() {
+      $state.go(destinationState)
+    })
   }
 
 }])
