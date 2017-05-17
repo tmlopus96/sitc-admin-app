@@ -297,15 +297,58 @@ app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRippl
     )
   }
 
+  $scope.forDate = setLogisticsDate()
+  function setLogisticsDate () {
+    var myDate = new Date()
+    $log.log("Date is " + myDate.toLocaleDateString())
+
+    // if it's before 8 and logistics haven't been init-ed yet, we know we're initting logistics for today
+    if (myDate.getHours() < 8) {
+      return myDate
+    }
+    else {
+      // advance to tomorrow; do it again until we get a Tues-Fri
+      do {
+        $log.log('myDate.getDate: ' + myDate.getDate())
+        myDate.setDate(myDate.getDate() + 1)
+      } while (myDate.getDay() <= 1 || myDate.getDay() == 6)
+
+      $log.log("Date is " + myDate.toLocaleDateString())
+      return myDate
+    }
+  }
+
   $scope.inkRipple = function(ev) {
     var row = angular.element(ev.target).parent().parent().parent()
     $mdInkRipple.attach($scope, row, {dimBackground: true})
   }
 
-  $scope.addNew = function() {
-    addProjectSiteModal()
+  $scope.addNew = function () {
+    addProjectSiteModal().then(function success(newSite) {
+      $log.log("recieved this from addProjectSiteModal: " + dump(newSite, 'none'))
+      $scope.projectSites[newSite.id] = newSite
+      if (newSite.isActive) {
+        $scope.activeSites.push(newSite.id)
+      }
+      // $log.log("projectSites: " + dump($scope.projectSites, 'none'))
+    })
   }
 }])
+
+// filter used in siteSelect view
+app.filter('orderSites', function() {
+  return function(projectSites) {
+    // Adapted from sorting filter by Justin Klemm @ justinklemm.com
+    var sites_filtered = []
+    angular.forEach(projectSites, function(currentSite) {
+      sites_filtered.push(currentSite)
+    })
+    sites_filtered.sort(function(a, b) {
+      return a.name.localeCompare(b.name)
+    })
+    return sites_filtered
+  }
+})
 
 app.controller('ActiveCrewSelectionController', ['$scope', '$log', 'getCrew', 'updateActiveCrew', function($scope, $log, getCrew, updateActiveCrew) {
 

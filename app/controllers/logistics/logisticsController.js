@@ -1,27 +1,9 @@
 var app = angular.module('adminApp')
 
-app.controller('LogisticsController', ['$scope', '$log', '$state', '$q', 'getProjectSites', 'getCarpoolSites', 'getCrew', 'getTeerCars', 'getVans', 'projectSitesHaveBeenSetToday', function($scope, $log, $state, $q, getProjectSites, getCarpoolSites, getCrew, getTeerCars, getVans, projectSitesHaveBeenSetToday) {
+app.controller('LogisticsController', ['$scope', '$log', '$state', '$q', 'getProjectSites', 'getCarpoolSites', 'getCrew', 'getTeerCars', 'getVans', 'projectSitesHaveBeenSetToday', 'setProjectSitesHaveBeenSetToday', 'logisticsInit', function($scope, $log, $state, $q, getProjectSites, getCarpoolSites, getCrew, getTeerCars, getVans, projectSitesHaveBeenSetToday, setProjectSitesHaveBeenSetToday, logisticsInit) {
   $log.log('Hello, world! LogisticsController is running!')
 
-  $scope.hideTabs = false
-
-  projectSitesHaveBeenSetToday().then(function(status) {
-    if (!status) {
-      $state.go("logistics.projectSiteSelection")
-      $scope.hideTabs = true
-    }
-    else if ($state.current.name == 'logistics') {
-      $log.log("$state.current.name == logistics; going to carpoolPanel!")
-      $state.go('logistics.carpoolSitesPanel')
-      $scope.selectedTab = 0
-    }
-    else if ($state.current.name == 'logistics.carpoolSitesPanel') {
-      $scope.selectedTab = 0
-    }
-    else if ($state.current.name == 'logistics.projectSitesPanel') {
-      $scope.selectedTab = 1
-    }
-  })
+  $scope.hideTabs = true
 
   $scope.carpoolSites = {}
   $scope.projectSites = {}
@@ -78,7 +60,7 @@ app.controller('LogisticsController', ['$scope', '$log', '$state', '$q', 'getPro
       $scope.crew = crew_result
       Object.keys($scope.crew).forEach(function(personId) {
         $scope.crew[personId].numPassengers = parseInt($scope.crew[personId].numPassengers) //not loading into number input for some reason
-        if ($scope.crew[personId].isOnLogistics == '1' || $scope.crew[personId.isOnLogistics == 1]) {
+        if ($scope.crew[personId].isOnLogistics == '1' || $scope.crew[personId].isOnLogistics == 1) {
           $scope.crew[personId].isOnLogistics = 1
           $scope.activeCrew.push(parseInt(personId))
           if ($scope.crew[personId].carpoolSite_id) {
@@ -144,6 +126,36 @@ app.controller('LogisticsController', ['$scope', '$log', '$state', '$q', 'getPro
 
       })
     })
+  }).then(function success() {
+    projectSitesHaveBeenSetToday().then(function(status) {
+      $log.log('init status: ' + status + '; current state: ' + $state.current.name)
+      if (!status) {
+        $state.go("logistics.projectSiteSelection")
+        // logisticsInit($scope.projectSites, $scope.activeSites, $scope.getSitesForProject).then(function success(params) {
+        //   $scope.projectSites = params.projectSites
+        //   $scope.activeSites = params.activeSites
+        //   $state.go('logistics.carpoolSitesPanel')
+        //   $scope.selectedTab = 0
+        //   $scope.hideTabs = false
+        // })
+      }
+      else if ($state.current.name == 'logistics') {
+        $log.log("$state.current.name == logistics; going to carpoolPanel!")
+        $state.go('logistics.carpoolSitesPanel')
+        $scope.selectedTab = 0
+        $scope.hideTabs = false
+      }
+      else if ($state.current.name == 'logistics.carpoolSitesPanel') {
+        $scope.selectedTab = 0
+        $scope.hideTabs = false
+      }
+      else if ($state.current.name == 'logistics.projectPanel') {
+        $log.log("Going to projectPanel!")
+        $state.go('logistics.projectPanel')
+        $scope.selectedTab = 1
+        $scope.hideTabs = false
+      }
+    })
   })
 
   $scope.getSitesForProject = function(project) {
@@ -155,6 +167,16 @@ app.controller('LogisticsController', ['$scope', '$log', '$state', '$q', 'getPro
     })
 
     return sitesForThisProject
+  }
+
+  $scope.endInit = function () {
+    setProjectSitesHaveBeenSetToday(1).then(function success() {
+      $scope.selectedTab = 0
+      $scope.hideTabs = false
+      $scope.gotoTab('carpoolPanel')
+    }, function failure() {
+      // error handling
+    })
   }
 
   /*

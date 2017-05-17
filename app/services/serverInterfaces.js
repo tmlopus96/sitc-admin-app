@@ -284,3 +284,17 @@ app.factory('deleteTeerCar', ['$log', '$q', '$http', '$mdToast', function($log, 
     })
   }
 }])
+
+app.factory('setProjectSitesHaveBeenSetToday', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http) {
+
+  return function(status) {
+    return $http({
+      method: 'GET',
+      url: 'app/appServer/setProjectSitesHaveBeenSetToday.php',
+      params: {
+        projectSitesHaveBeenSetToday: status
+      }
+    })
+  }
+
+}])

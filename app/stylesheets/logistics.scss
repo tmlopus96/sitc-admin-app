@@ -1,3 +1,11 @@
+#logisticsInitModalDate {
+  color: $accentColor;
+}
+
+th {
+  padding-left: 5px !important;
+}
+
 /* Have to set height explicity on ui-view
 to prevent collapsing during animation*/
 .ui-view-container {
@@ -83,4 +91,8 @@ to prevent collapsing during animation*/
 .left-to-right.ng-leave {
   -webkit-animation: slideout-to-left 0.3s ease-in-out;
   animation: slideout-to-left 0.3s ease-in-out;
+}
+
+.logistics-toolbar-item {
+  padding-right: 10px;
 }

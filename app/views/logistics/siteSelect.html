@@ -1,37 +1,47 @@
 <!--Material Icons Font-->
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-<md-content flex="65">
+<div flex="65">
 
-  <md-button class="md-primary" ng-click="addNew()">Add New Site</md-button>
+  <div style="margin-top:10px">
+    <span class="md-title" style="margin-bottom: 0; margin-top: 10px">Set up logistics for: </span>
+    <span class="md-title" id="logisticsInitModalDate" style="font-weight: bold" class="md-hue-2">{{ forDate.toLocaleDateString('en-US', {weekday: 'long', month: 'long', day: 'numeric'})}}</span>
+  </div>
+  <h3 class="md-subhead" style="margin-top: 10px; margin-bottom: 10px">Select the project sites that will be active.</h3>
 
-<md-table-container>
-  <table md-table>
-    <thead md-head>
-      <tr md-row>
-        <th md-column align-rule="left">Select All</th>
-        <th md-column align-rule="left">Name</th>
-        <th md-column align-rule="left">Project</th>
-        <th md-column align-rule="left">Address</th>
-        <th md-column align-rule="left">Partner Contact</th>
-      </tr>
-    </thead>
+  <md-button class="md-accent" style="margin-left:0" ng-click="addNew()">
+    <md-icon>add</md-icon>
+    Add New Site
+  </md-button>
 
-    <tbody md-body>
-      <tr md-row ng-repeat="(siteId, siteInfo) in projectSites">
-        <td md-cell html-content="true">
-          <md-checkbox md-no-ink ng-model="projectSites[siteId].isActive" ng-true-value=1 ng-false-value=0 ng-change="toggleActive(siteId)" aria-label="Site Active Toggle">
-          </md-checkbox>
-        </td>
-        <td md-cell>{{ siteInfo.name }}</td>
-        <td md-cell html-content="true">
-          <md-icon class="sitc-icon-">{{ siteInfo.project }}</md-icon>
-        </td>
-        <td md-cell>{{ siteInfo.address }}</td>
-        <td md-cell>{{ siteInfo.partnerContactName }}</td>
-      </tr>
-    </tbody>
-  </table>
-</md-table-container>
+  <md-table-container>
+    <table md-table>
+      <thead md-head>
+        <tr md-row>
+          <th md-column align-rule="left"></th>
+          <th md-column align-rule="left">Name</th>
+          <th md-column align-rule="left">Project</th>
+          <th md-column align-rule="left">Address</th>
+          <th md-column align-rule="left">Partner Contact</th>
+        </tr>
+      </thead>
 
-</md-content>
+      <tbody md-body>
+        <!-- orderSites filter is defined in childControllers.js -->
+        <tr md-row ng-repeat="site in projectSites | orderSites">
+          <td md-cell html-content="true">
+            <md-checkbox md-no-ink ng-model="site.isActive" ng-true-value=1 ng-false-value=0 ng-change="toggleActive(siteId)" aria-label="Site Active Toggle">
+            </md-checkbox>
+          </td>
+          <td md-cell>{{ site.name }}</td>
+          <td md-cell html-content="true">
+            <md-icon class="sitc-icon-">{{ site.project }}</md-icon>
+          </td>
+          <td md-cell>{{ site.address }}</td>
+          <td md-cell>{{ site.partnerContactName }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </md-table-container>
+
+</div>

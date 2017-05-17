@@ -1,0 +1,52 @@
+<!--Material Icons Font-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+<div>
+
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>Project Site Setup</h2>
+    </div>
+    <span flex></span>
+    <md-button ng-click="endInit()">Done</md-button>
+  </md-toolbar>
+
+  <div id="modalBodyContent" class="md-padding">
+
+    <span class="md-title" style="margin-bottom: 0; margin-top: 5px">Set up logistics for: </span>
+    <span class="md-title" id="logisticsInitModalDate" style="font-weight: bold; margin-top: 0" class="md-hue-2">{{ forDate.toLocaleDateString('en-US', {weekday: 'long', month: 'long', day: 'numeric'})}}</span>
+    <h3 class="md-subhead" style="margin-top: 10px; margin-bottom: 10px">Select the project sites that will be active.</h3>
+
+    <md-button class="md-accent" style="margin-left:0" ng-click="addNew()">
+      <md-icon>add</md-icon>
+      Add New Site
+    </md-button>
+
+    <md-table-container>
+      <table md-table>
+        <thead md-head>
+          <tr md-row>
+            <th md-column align-rule="left"></th>
+            <th md-column align-rule="left">Name</th>
+            <th md-column align-rule="left">Project</th>
+            <th md-column align-rule="left">Address</th>
+          </tr>
+        </thead>
+
+        <tbody md-body>
+          <tr md-row ng-repeat="siteId in projectSiteIds_ordered">
+            <td md-cell html-content="true">
+              <md-checkbox md-no-ink ng-model="projectSites[siteId].isActive" ng-true-value=1 ng-false-value=0 ng-change="toggleActive(siteId)" aria-label="Site Active Toggle">
+              </md-checkbox>
+            </td>
+            <td md-cell>{{ projectSites[siteId].name }}</td>
+            <td md-cell html-content="true">
+              <md-icon class="sitc-icon-">{{ projectSites[siteId].project }}</md-icon>
+            </td>
+            <td md-cell>{{ projectSites[siteId].address }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </md-table-container>
+  </div> <!-- end #modalBodyContent -->
+</div>

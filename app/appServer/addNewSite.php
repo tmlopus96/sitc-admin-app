@@ -36,6 +36,10 @@ require_once 'sitc_workforce_creds.php';
   if (!$queryResult)
     die ($connection->error);
 
+  $site['projectSite_id'] = $id;
+
+  echo json_encode($site);
+
 ?>
 
  <?php

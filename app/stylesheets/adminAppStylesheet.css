@@ -1,3 +1,4 @@
+/* Colors */
 .carpool-card-counter-text, .project-card-counter-text {
   padding-bottom: 0;
   padding-top: 0;
@@ -92,6 +93,12 @@ md-list.carpool-panel-list md-list-item, md-list.project-panel-list md-list-item
 .md-subheader {
   background-color: transparent; }
 
+#logisticsInitModalDate {
+  color: rgba(255, 110, 64, 0.87); }
+
+th {
+  padding-left: 5px !important; }
+
 /* Have to set height explicity on ui-view
 to prevent collapsing during animation*/
 .ui-view-container {
@@ -153,6 +160,9 @@ to prevent collapsing during animation*/
 .left-to-right.ng-leave {
   -webkit-animation: slideout-to-left 0.3s ease-in-out;
   animation: slideout-to-left 0.3s ease-in-out; }
+
+.logistics-toolbar-item {
+  padding-right: 10px; }
 
 @media only screen and (min-width: 768px) {
   #mainView {

@@ -1,8 +1,9 @@
 var app = angular.module('adminApp')
 
-app.factory('addProjectSiteModal', ['$log', '$mdDialog', '$http', function($log, $mdDialog, $http) {
+app.factory('addProjectSiteModal', ['$log', '$mdDialog', '$http', '$q', function($log, $mdDialog, $http, $q) {
 
   return function () {
+    var defer = $q.defer()
 
     $mdDialog.show({
       templateUrl: 'app/views/modals/addProjectSiteModalTemplate.html',
@@ -19,12 +20,14 @@ app.factory('addProjectSiteModal', ['$log', '$mdDialog', '$http', function($log,
           site: newSiteToPass
         }
       }).then(function(response) {
-        $log.log("Response from addProjectSite.php: " + dump(response, 'none'))
+        // $log.log("Response from addProjectSite.php: " + dump(response, 'none'))
+        defer.resolve(response.data)
       },
       function(error) {
         // error handling
       })
     })
+    return defer.promise
   }
 }])
 
