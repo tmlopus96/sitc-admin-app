@@ -1,11 +1,14 @@
 <md-toolbar md-scroll-shrink style="z-index:0">
   <div class="md-toolbar-tools">
-    <span class="md-title logistics-toolbar-item">Select Sites</span>
-    <span class="logistics-toolbar-item">&gt;</span>
-    <span class="md-title logistics-toolbar-item">Assign Crew</span>
+    <span class="md-title logistics-toolbar-item" ng-class="{'cursor-pointer': breadcrumbShows.assignCrew}" ng-show="breadcrumbShows.selectSites" ng-click="backToInit()">Select Sites</span>
+    <span class="logistics-toolbar-item" ng-show="breadcrumbShows.assignCrew">&gt;</span>
+    <span class="md-title logistics-toolbar-item" ng-show="breadcrumbShows.assignCrew">Assign Crew</span>
     <span flex></span>
-    <md-button ng-click="endInit()">
+    <md-button ng-click="endInit()" ng-hide="breadcrumbShows.assignCrew">
       Next
+    </md-button>
+    <md-button ng-click="backToInit()" ng-show="breadcrumbShows.assignCrew">
+      Back
     </md-button>
   </div>
 </md-toolbar>

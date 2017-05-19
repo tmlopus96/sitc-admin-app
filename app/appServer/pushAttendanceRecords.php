@@ -6,74 +6,89 @@
   if ($connection->connect_error)
     die ($connection->connect_error);
 
-  $query = "SELECT ch.person_id, ch.carpoolSite_id, ch.assignedToProject, ch.assignedToSite_id, ch.driverStatus, ch.assignedToDriver_id, ch.isCheckedIn, p.isCrew FROM CheckedIn ch, Person p WHERE ch.person_id=p.person_id";
+  $query = "SELECT ch.person_id, ch.carpoolSite_id, ch.assignedToProject, ch.assignedToSite_id, ch.driverStatus, ch.assignedToDriver_id, ch.isCheckedIn, p.isCrew FROM CheckedIn ch, Person p WHERE ch.person_id=p.person_id AND ch.isCheckedIn=1";
   echo $query . '\n';
   $checkedIn_result = $connection->query($query);
 
   if (!$checkedIn_result) {
     die ($connection->error);
   }
-
-  $rows = [];
-  while ($currentPerson = $checkedIn_result->fetch_assoc()) {
-
-    if (!$currentPerson['isCheckedIn']) {
-      break;
-    }
-
-    $row = [];
-
-    $row[0] = $currentPerson['person_id'];
-    $row[1] = "'" . $currentPerson['carpoolSite_id'] . "'";
-    $row[2] = "'" . $currentPerson['assignedToProject'] . "'";
-    $row[3] = "'" . $currentPerson['assignedToSite_id'] . "'";
-
-    if ($currentPerson['driverStatus'] == 'isDriver') {
-      $row[4] = 1;
-    } else {
-      $row[4] = 0;
-    }
-
-    $row[5] = ($currentPerson['assignedToDriver_id']) ? $currentPerson['assignedToDriver_id'] : 0;
-
-    if ($currentPerson['isCrew'] == 1 || $currentPerson['driverStatus'] == 1) {
-      $row[6] = 5;
-    } else {
-      $row[6] = 4;
-    }
-
-    $rowString = implode(', ', $row);
-    array_push($rows, "($rowString)");
-
+  else {
+    echo json_encode($checkedIn_result);
   }
 
-  $rowsString = implode(', ', $rows);
+// this has to be before the if (num_rows>0) statement because it is used by the very last query either way
+date_default_timezone_set('America/Detroit');
+$dateOfService = new DateTime();
+while (date('w', $dateOfService->getTimestamp()) > 5 || date('w', $dateOfService->getTimestamp()) < 2) {
+  $dateOfService->sub(new DateInterval('P1D'));
+}
+echo date('w', $dateOfService->getTimestamp());
+echo "Date: " . "&nbsp;";
+echo date('Y-m-d', $dateOfService->getTimestamp());
 
-  /*** Array Indices ***
-    [0] person_id
-    [1] carpoolSite_id
-    [2] assignedToProject
-    [3] assignedToSite_id
-    [4] wasDriver
-    [5] assignedToDriver_id
-    [6] numHoursToCredit
-  ***/
+if ($checkedIn_result->num_rows > 0) {
+    // set the dateOfService for this round of attendance records
 
-  $query = "INSERT INTO AttendanceRecord (person_id, carpoolSite_id, assignedToProject, assignedToSite_id, wasDriver, assignedToDriver_id, numHoursToCredit) VALUES $rowsString";
-  $attendanceRecords_result = $connection->query($query);
+    $rows = [];
+    while ($currentPerson = $checkedIn_result->fetch_assoc()) {
+      if (!$currentPerson['isCheckedIn']) {
+        break;
+      }
 
-  if (!attendanceRecords_result) {
-    die ($connection->error);
-  }
+      $row = [];
 
-  $query = "DELETE FROM CheckedIn WHERE isOnLogistics=0 || isOnLogistics IS NULL";
-  $connection->query($query);
+      $row[0] = "'" . date('Y-m-d', $dateOfService->getTimestamp()) . "'";
+      $row[1] = $currentPerson['person_id'];
+      $row[2] = "'" . $currentPerson['carpoolSite_id'] . "'";
+      $row[3] = "'" . $currentPerson['assignedToProject'] . "'";
+      $row[4] = "'" . $currentPerson['assignedToSite_id'] . "'";
+      $row[5] = ($currentPerson['driverStatus'] == 'isDriver') ? 1 : 0;
+      $row[6] = ($currentPerson['assignedToDriver_id']) ? $currentPerson['assignedToDriver_id'] : 0;
+      $row[7] = ($currentPerson['isCrew'] || $currentPerson['driverStatus'] == 1) ? 5 : 4;
 
-  $query = "UPDATE CheckedIn SET isCheckedIn=0";
+      $rowString = implode(', ', $row);
+      echo "Imploded row: ";
+      var_dump($rowString);
+      echo '\n';
+      array_push($rows, "($rowString)");
+
+    }
+
+    $rowsString = implode(', ', $rows);
+    echo $rowsString;
+
+    /*** Array Indices ***
+      [0] dateOfService
+      [1] person_id
+      [2] carpoolSite_id
+      [3] assignedToProject
+      [4] assignedToSite_id
+      [5] wasDriver
+      [6] assignedToDriver_id
+      [7] numHoursToCredit
+    ***/
+
+    $query = "INSERT INTO AttendanceRecord (dateOfService, person_id, carpoolSite_id, assignedToProject, assignedToSite_id, wasDriver, assignedToDriver_id, numHoursToCredit) VALUES $rowsString";
+    echo $query;
+    $attendanceRecords_result = $connection->query($query);
+
+    if (!$attendanceRecords_result) {
+      die ($connection->error);
+    }
+
+    $query = "DELETE FROM CheckedIn WHERE isOnLogistics=0 || isOnLogistics IS NULL";
+    $connection->query($query);
+
+    $query = "UPDATE CheckedIn SET isCheckedIn=0";
+    $connection->query($query);
+  } // end if(num_rows > 0)
+
+  $dateForQuery = date('Y-m-d', $dateOfService->getTimestamp());
+  $query = "UPDATE SessionVals SET lastAttendanceRecordPush='$dateForQuery'";
   $connection->query($query);
 
   echo $query . '\n';
-
 
 ?>
 

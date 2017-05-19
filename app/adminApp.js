@@ -22,6 +22,12 @@ app.config(function($stateProvider) {
         controller: 'ProjectPanelController',
         data: {requireLogin: true}
       })
+      .state('saveAttendanceRecords', {
+        url: '/attendanceRecords',
+        templateUrl: 'app/views/saveAttendanceRecords.html',
+        controller: 'SaveAttendanceRecordsController',
+        data: {requireLogin: true}
+      })
       .state('logistics.projectSiteSelection', {
         url: '/siteSelect',
         templateUrl: 'app/views/logistics/siteSelect.html',

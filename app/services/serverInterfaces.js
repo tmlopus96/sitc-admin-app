@@ -173,6 +173,27 @@ app.factory('projectSitesHaveBeenSetToday', ['$log', '$q', '$http', function($lo
 
 }])
 
+app.factory('lastAttendanceRecordPush', ['$log', '$q', '$http', function($log, $q, $http) {
+
+  return function() {
+    var defer = $q.defer()
+
+    $http({
+      method: "GET",
+      url: "app/appServer/lastAttendanceRecordPush.php"
+    }).then(function success(response) {
+      $log.log("Response from lastAttendanceRecordPush: " + dump(response, 'none'))
+      defer.resolve(response.data)
+    }, function failure() {
+      // error handling
+    })
+
+    return defer.promise
+  }
+
+
+}])
+
 /*** Setters ***/
 
 app.factory('toggleSiteActive', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http, $mdToast) {
@@ -294,6 +315,18 @@ app.factory('setProjectSitesHaveBeenSetToday', ['$log', '$q', '$http', '$mdToast
       params: {
         projectSitesHaveBeenSetToday: status
       }
+    })
+  }
+
+}])
+
+/*** Pingers ***/
+app.factory('pushAttendanceRecords', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http) {
+
+  return function () {
+    return $http({
+      method: 'GET',
+      url: 'app/appServer/pushAttendanceRecords.php'
     })
   }
 

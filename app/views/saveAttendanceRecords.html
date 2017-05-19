@@ -1,0 +1,38 @@
+<div flex-gt-sm="70">
+
+  <h2>Save Attendance</h2>
+  <h4 class="md-subhead">It looks like attendance for the last project day has not been saved yet.</h4>
+
+  <div ng-hide="attendanceDidSucceed || attendanceDidFail">
+    <div>
+      <span class="md-subhead">Save attendance for: </span>
+      <span id="logisticsInitModalDate" class="md-subhead" style="font-weight: bold">{{ forDate.toLocaleDateString('en-US', {weekday: 'long', month: 'long', day: 'numeric'})}}</span>
+    </div>
+    <md-button ng-click="saveAttendance()">
+      Save
+    </md-button>
+    <md-button class="md-warn" ng-click="toLogistics(true)">
+      Don't Save
+    </md-button>
+  </div>
+
+  <div ng-show="attendanceDidSucceed">
+    <h3>Hooray!</h3>
+    <h4>Attendance was saved successfully.</h4>
+    <md-button class="md-primary" ng-click="toLogistics()">
+      Next
+    </md-button>
+  </div>
+
+  <div ng-show="attendanceDidFail">
+    <h3>Uh oh!</h3>
+    <h4>Something went wrong. Try again.</h4>
+    <md-button ng-click="saveAttendance()">
+      Save
+    </md-button>
+    <md-button class="md-warn" ng-click="toLogistics(true)">
+      Don't Save
+    </md-button>
+  </div>
+
+</div>

@@ -6,6 +6,10 @@ th {
   padding-left: 5px !important;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 /* Have to set height explicity on ui-view
 to prevent collapsing during animation*/
 .ui-view-container {

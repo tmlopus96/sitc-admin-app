@@ -1,9 +1,31 @@
 var app = angular.module('adminApp')
 
-app.controller('LogisticsController', ['$scope', '$log', '$state', '$q', 'getProjectSites', 'getCarpoolSites', 'getCrew', 'getTeerCars', 'getVans', 'projectSitesHaveBeenSetToday', 'setProjectSitesHaveBeenSetToday', 'logisticsInit', function($scope, $log, $state, $q, getProjectSites, getCarpoolSites, getCrew, getTeerCars, getVans, projectSitesHaveBeenSetToday, setProjectSitesHaveBeenSetToday, logisticsInit) {
+app.controller('LogisticsController', ['$scope', '$log', '$mdToast', '$state', '$stateParams', '$q', 'getProjectSites', 'getCarpoolSites', 'getCrew', 'getTeerCars', 'getVans', 'projectSitesHaveBeenSetToday', 'setProjectSitesHaveBeenSetToday', 'logisticsInit', 'pushAttendanceRecords', 'lastAttendanceRecordPush', function($scope, $log, $mdToast, $state, $stateParams, $q, getProjectSites, getCarpoolSites, getCrew, getTeerCars, getVans, projectSitesHaveBeenSetToday, setProjectSitesHaveBeenSetToday, logisticsInit, pushAttendanceRecords, lastAttendanceRecordPush) {
   $log.log('Hello, world! LogisticsController is running!')
 
-  $scope.hideTabs = true
+  lastAttendanceRecordPush().then(function (responseDate) {
+    var dateOfLastPush = new Date(responseDate)
+    $log.log("Date of last push: " + dateOfLastPush.toLocaleDateString())
+    $log.log("$stateParams: " + dump($stateParams, 'none'))
+    $log.log("forceGo: " + $state.current.data.forceGo)
+    var lastProjectDate = setLastProjectDate()
+    if (!$state.current.data.forceGo && (lastProjectDate.getDate() != dateOfLastPush.getDate() || lastProjectDate.getMonth() != dateOfLastPush.getMonth() || lastProjectDate.getYear() != dateOfLastPush.getYear())) { // && (lastProjectDate.getDate() != dateOfLastPush.getDate() || lastProjectDate.getMonth() != lastProjectDate.getMonth())
+      // delete after use
+      delete $state.current.data.forceGo
+      $state.go('saveAttendanceRecords')
+    }
+  })
+  // Used above in lastAttendanceRecordPush.then(func{})
+  function setLastProjectDate () {
+    var myDate = new Date()
+
+    while (myDate.getDay() > 5 || myDate.getDay() < 2) {
+      myDate.setDate(myDate.getDate() - 1)
+    }
+
+    $log.log("Date is " + myDate.toLocaleDateString())
+    return myDate
+  }
 
   $scope.carpoolSites = {}
   $scope.projectSites = {}
@@ -13,6 +35,12 @@ app.controller('LogisticsController', ['$scope', '$log', '$state', '$q', 'getPro
   $scope.activeGroups = []
   $scope.teerCars = {}
   $scope.vans = {}
+
+  $scope.hideTabs = true
+  $scope.breadcrumbShows = {
+    'selectSites': true,
+    'assignCrew': false
+  }
 
   // -- Load data
   // load carpool sites
@@ -76,6 +104,7 @@ app.controller('LogisticsController', ['$scope', '$log', '$state', '$q', 'getPro
 
         // on last iteration of forEach, resolve promise
         if (Object.keys($scope.crew).indexOf(personId) == Object.keys($scope.crew).length - 1) {
+          $log.log("Carpool Sites after Crew init: " + dump($scope.carpoolSites, 'none'))
           $log.log("Resolving crew promise!")
           defer.resolve()
         }
@@ -131,52 +160,90 @@ app.controller('LogisticsController', ['$scope', '$log', '$state', '$q', 'getPro
       $log.log('init status: ' + status + '; current state: ' + $state.current.name)
       if (!status) {
         $state.go("logistics.projectSiteSelection")
-        // logisticsInit($scope.projectSites, $scope.activeSites, $scope.getSitesForProject).then(function success(params) {
-        //   $scope.projectSites = params.projectSites
-        //   $scope.activeSites = params.activeSites
-        //   $state.go('logistics.carpoolSitesPanel')
-        //   $scope.selectedTab = 0
-        //   $scope.hideTabs = false
-        // })
       }
-      else if ($state.current.name == 'logistics') {
-        $log.log("$state.current.name == logistics; going to carpoolPanel!")
-        $state.go('logistics.carpoolSitesPanel')
-        $scope.selectedTab = 0
-        $scope.hideTabs = false
-      }
-      else if ($state.current.name == 'logistics.carpoolSitesPanel') {
-        $scope.selectedTab = 0
-        $scope.hideTabs = false
-      }
-      else if ($state.current.name == 'logistics.projectPanel') {
-        $log.log("Going to projectPanel!")
-        $state.go('logistics.projectPanel')
-        $scope.selectedTab = 1
-        $scope.hideTabs = false
+      else {
+        var forDate = setLogisticsDate()
+        function setLogisticsDate () {
+          var myDate = new Date()
+          $log.log("Date is " + myDate.toLocaleDateString())
+
+          // if it's before 8 and logistics haven't been init-ed yet, we know we're initting logistics for today
+          if (myDate.getHours() < 8) {
+            return myDate
+          }
+          else {
+            // advance to tomorrow; do it again until we get a Tues-Fri
+            do {
+              $log.log('myDate.getDate: ' + myDate.getDate())
+              myDate.setDate(myDate.getDate() + 1)
+            } while (myDate.getDay() <= 1 || myDate.getDay() == 6)
+
+            $log.log("Date is " + myDate.toLocaleDateString())
+            return myDate
+          }
+        }
+
+        var displayDate = forDate.toLocaleDateString('en-US', {weekday: 'long', month: 'long', day: 'numeric'})
+        $mdToast.show({
+          hideDelay   : 3000,
+          position    : 'bottom left',
+          template : "<md-toast><div class='md-toast-content'><span>Managing logistics for <strong>" + displayDate + "</strong></span></div></md-toast>"
+        })
+
+        if ($state.current.name === 'logistics') {
+          $log.log("$state.current.name == logistics; going to carpoolPanel!")
+          $state.go('logistics.carpoolSitesPanel')
+          $scope.selectedTab = 0
+          $scope.hideTabs = false
+          $scope.breadcrumbShows.assignCrew = true
+        }
+        else if ($state.current.name === 'logistics.carpoolSitesPanel') {
+          $log.log("$state.current.name == logistics.carpoolSitesPanel; going to carpoolPanel!")
+          $state.go('logistics.carpoolSitesPanel')
+          $scope.selectedTab = 0
+          $scope.hideTabs = false
+          $scope.breadcrumbShows.assignCrew = true
+        }
+        else if ($state.current.name === 'logistics.projectPanel') {
+          $log.log("Going to projectPanel!")
+          $state.go('logistics.projectPanel')
+          $scope.selectedTab = 1
+          $scope.hideTabs = false
+          $scope.breadcrumbShows.assignCrew = true
+        }
       }
     })
+
+    $scope.getSitesForProject = function(project) {
+      var sitesForThisProject = []
+      $scope.activeSites.forEach(function(currentSite) {
+        if ($scope.projectSites[currentSite].project == project) {
+          sitesForThisProject.push(currentSite)
+        }
+      })
+
+      return sitesForThisProject
+    }
+
+    $scope.endInit = function () {
+      setProjectSitesHaveBeenSetToday(1).then(function success() {
+        $scope.selectedTab = 0
+        $scope.hideTabs = false
+        $scope.breadcrumbShows.assignCrew = true
+        $scope.gotoTab('carpoolPanel')
+      }, function failure() {
+        // error handling
+      })
+    }
   })
 
-  $scope.getSitesForProject = function(project) {
-    var sitesForThisProject = []
-    $scope.activeSites.forEach(function(currentSite) {
-      if ($scope.projectSites[currentSite].project == project) {
-        sitesForThisProject.push(currentSite)
-      }
-    })
 
-    return sitesForThisProject
-  }
 
-  $scope.endInit = function () {
-    setProjectSitesHaveBeenSetToday(1).then(function success() {
-      $scope.selectedTab = 0
-      $scope.hideTabs = false
-      $scope.gotoTab('carpoolPanel')
-    }, function failure() {
-      // error handling
-    })
+  $scope.backToInit = function() {
+    $log.log("Going back to init!")
+    $scope.hideTabs = true
+    $scope.breadcrumbShows.assignCrew = false
+    $state.go('logistics.projectSiteSelection')
   }
 
   /*

@@ -4,9 +4,72 @@ app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$
 
   $scope.speedDialIsOpen = false
 
+  $scope.$watchCollection(
+    function () {
+        var returnObj = {}
+        // $log.log("The watchListener is running!")
+        angular.forEach($scope.carpoolSites, function(info, id) {
+          // $log.log("Info: " + dump(info, 'none'))
+          returnObj[id+'_crew'] = info.assignedCrew.length
+          returnObj[id+'_vans'] = info.assignedVans.length
+          returnObj[id+'_teerCars'] = info.assignedTeerCars.length
+        })
+        return returnObj
+      // return $scope.carpoolSites['nv'].assignedTeerCars
+    },
+    function (newVal, oldVal) {
+      $log.log("The watch callback is running!")
+      // $log.log("newVal: " + dump(newVal, 'none') + ", oldVal: " + dump(oldVal, 'none'))
+      var sitesToUpdate = []
+      angular.forEach(newVal, function(length, id) {
+        if (length != oldVal[id]) {
+          // -- get id as substring of id_<crew/van/teerCar>
+          var index = id.indexOf('_')
+          var id_proper = id.substring(0, index)
+
+          if (sitesToUpdate.indexOf(id_proper) < 0) {
+            sitesToUpdate.push(id_proper)
+          }
+        }
+      })
+      // $log.log("sitesToUpdate: " + dump(sitesToUpdate, 'none'))
+
+      angular.forEach(sitesToUpdate, function(siteId) {
+        var numCrewSeatbelts = 0
+        var numVanSeatbelts = 0
+        var numTeerCarSeatbelts = 0
+
+        if ($scope.carpoolSites[siteId].assignedCrew) {
+          angular.forEach($scope.carpoolSites[siteId].assignedCrew, function(currentCrewId) {
+            numCrewSeatbelts += parseInt($scope.crew[currentCrewId].numSeatbelts)
+          })
+        }
+
+        if ($scope.carpoolSites[siteId].assignedVans) {
+          angular.forEach($scope.carpoolSites[siteId].assignedVans, function(currentVan) {
+            numVanSeatbelts += parseInt($scope.vans[currentVan].numSeatbelts)
+          })
+        }
+
+        if ($scope.carpoolSites[siteId].assignedTeerCars.length) {
+          angular.forEach($scope.carpoolSites[siteId].assignedTeerCars, function(currentTeerCar) {
+            // $log.log("forEach for the assignedTeerCars ran!")
+            numTeerCarSeatbelts += parseInt($scope.teerCars[currentTeerCar].assignedNumPassengers)
+          })
+        }
+
+        // $log.log("numCrewSeatbelts: " + numCrewSeatbelts + ", numVanSeatbelts: " + numVanSeatbelts + ", numTeerCarSeatbelts: " + numTeerCarSeatbelts)
+        $scope.carpoolSites[siteId].numSeatbelts = numCrewSeatbelts + numVanSeatbelts + numTeerCarSeatbelts
+      })
+    }
+  )
+
   $scope.addCrew = function(carpoolSite) {
+    $log.log("carpoolSite, before addCrewPanelModal: " + dump($scope.carpoolSites[carpoolSite].assignedCrew, 'none'))
     addCrewPanelModal(carpoolSite, $scope.crew, $scope.carpoolSites, $scope.projectSites).then(function success (personId) {
+      $log.log("carpoolSite, after addCrewPanelModal, before updateActiveCrew: " + dump($scope.carpoolSites[carpoolSite].assignedCrew, 'none'))
         updateActiveCrew(personId, 1, {'carpoolSite_id':carpoolSite}).then(function success (response) {
+          $log.log("carpoolSite, after updateActiveCrew: " + dump($scope.carpoolSites[carpoolSite].assignedCrew, 'none'))
             $log.log('updateActiveCrew response: ' + dump(response, 'none'))
             var personId = response.config.params.personId
             // In case this person is already on logistics for another carpool site, delete them from that site's array
@@ -23,8 +86,9 @@ app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$
 
             $scope.crew[personId].carpoolSite_id = carpoolSite
             $scope.crew[personId].isOnLogistics = 1
+            $log.log("AssignedCrew Before: " + dump($scope.carpoolSites[carpoolSite].assignedCrew, 'none'))
             $scope.carpoolSites[carpoolSite].assignedCrew.push(personId)
-            $log.log('AssignedCrew: ' + dump($scope.carpoolSites[carpoolSite].assignedCrew, 'none'))
+            $log.log('AssignedCrew After: ' + dump($scope.carpoolSites[carpoolSite].assignedCrew, 'none'))
         })
     })
   }
@@ -51,7 +115,8 @@ app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$
     }
 
     defer.promise.then(function yes() {
-      updateActiveCrew(withId, 0).then(function success() {
+      updateActiveCrew(withId, 0).then(function success(response) {
+        $log.log("Response from updateActiveCrew: " + dump(response, 'none'))
         $scope.crew[withId].carpoolSite_id = ''
         $scope.crew[withId].isOnLogistics = 0
 
@@ -547,5 +612,36 @@ app.controller('VolunteerCarsAllocationController', ['$scope', '$log', '$mdToast
       delete $scope.teerCars[id]
     })
   }
+
+}])
+
+app.controller('SaveAttendanceRecordsController', ['$scope', '$log', '$state', 'pushAttendanceRecords', function($scope, $log, $state, pushAttendanceRecords) {
+
+  $scope.forDate = setAttendanceDate()
+  function setAttendanceDate () {
+    var myDate = new Date()
+
+    while (myDate.getDay() > 5 || myDate.getDay() < 2) {
+      myDate.setDate(myDate.getDate() - 1)
+    }
+
+    $log.log("Date is " + myDate.toLocaleDateString())
+    return myDate
+  }
+
+  $scope.saveAttendance = function () {
+    pushAttendanceRecords().then(function success () {
+      $scope.attendanceDidSucceed = true
+    }, function failure () {
+      $scope.attendanceDidFail = true
+    })
+  }
+
+  $scope.toLogistics = function (willForceGo) {
+    $log.log("willForceGo: " + willForceGo)
+    $state.get('logistics').data['forceGo'] = willForceGo
+    $state.transitionTo('logistics')
+  }
+
 
 }])

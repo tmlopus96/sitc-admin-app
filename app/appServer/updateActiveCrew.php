@@ -12,7 +12,7 @@
   $queryFields = ["person_id"];
   $queryValues = [$personId];
   $updateClauses = [];
-  
+
   if (isset($_GET["isActive"])) {
     $isActive = sanitize($_GET["isActive"]);
     array_push($queryFields, 'isOnLogistics');
@@ -20,7 +20,13 @@
     array_push($updateClauses, "isOnLogistics=" . $isActive);
   }
 
-  if (isset($_GET["carpoolSite_id"])) {
+  if (isset($isActive) && $isActive == 0) {
+      $carpoolSite = '';
+      array_push($queryFields, 'carpoolSite_id');
+      array_push($queryValues, $carpoolSite);
+      array_push($updateClauses, "carpoolSite_id='" . $carpoolSite . "'");
+  }
+  else if (isset($_GET["carpoolSite_id"])) {
     $carpoolSite = sanitize($_GET["carpoolSite_id"]);
     array_push($queryFields, 'carpoolSite_id');
     array_push($queryValues, $carpoolSite);

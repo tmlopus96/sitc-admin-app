@@ -6,19 +6,17 @@
   if ($connection->connect_error)
     die ($connection->connect_error);
 
-  // WHERE id!='' exclude the null carpool site, which is kept in the db to satisfy the foreign key check on someone with no carpool site
-  $query = "SELECT * FROM CarpoolSite WHERE carpoolSite_id!=''";
-  $carpoolSites_result = $connection->query($query);
+  $query = "SELECT lastAttendanceRecordPush FROM SessionVals";
+  $result = $connection->query($query);
   if ($connection->error) {
     die ($connection->error);
   }
 
-  $sites = array();
-  while ($currentSite = $carpoolSites_result->fetch_assoc()) {
-    $sites[] = $currentSite;
+  while ($val = $result->fetch_assoc()) {
+    $lastPush = $val['lastAttendanceRecordPush'];
   }
 
-  echo json_encode($sites);
+  echo $lastPush;
 
  ?>
 

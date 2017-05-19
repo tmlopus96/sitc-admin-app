@@ -30,7 +30,7 @@
         <!-- orderSites filter is defined in childControllers.js -->
         <tr md-row ng-repeat="site in projectSites | orderSites">
           <td md-cell html-content="true">
-            <md-checkbox md-no-ink ng-model="site.isActive" ng-true-value=1 ng-false-value=0 ng-change="toggleActive(siteId)" aria-label="Site Active Toggle">
+            <md-checkbox md-no-ink ng-model="site.isActive" ng-true-value=1 ng-false-value=0 ng-change="toggleActive(site.projectSite_id)" aria-label="Site Active Toggle">
             </md-checkbox>
           </td>
           <td md-cell>{{ site.name }}</td>
