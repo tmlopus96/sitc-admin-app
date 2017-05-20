@@ -77,7 +77,7 @@ if ($checkedIn_result->num_rows > 0) {
       die ($connection->error);
     }
 
-    $query = "DELETE FROM CheckedIn WHERE isOnLogistics=0 || isOnLogistics IS NULL";
+    $query = "DELETE FROM CheckedIn";
     $connection->query($query);
 
     $query = "UPDATE CheckedIn SET isCheckedIn=0";

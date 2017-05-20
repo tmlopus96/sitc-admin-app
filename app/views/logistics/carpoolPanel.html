@@ -9,22 +9,25 @@
         </md-card-header>
       </md-toolbar>
       <md-card-title style="padding-top:0; padding-bottom:0" flex="20">
-        <div layout="row" flex="100" layout-margin>
-          <div flex></div>
-          <div>
-            <md-card-title-text class="carpool-card-counter-text">
-              <md-headline class="md-title">{{info.assignedCrew.length}}</md-headline>
-              <md-subhead>Crew</md-subhead>
-            </md-card-title-text>
+        <div layout="column" style="width:100%">
+          <div layout="row" flex="100" layout-margin>
+            <div flex></div>
+            <div>
+              <md-card-title-text class="carpool-card-counter-text">
+                <md-headline class="md-title">{{info.assignedCrew.length}}</md-headline>
+                <md-subhead>Crew</md-subhead>
+              </md-card-title-text>
+            </div>
+            <div flex></div>
+            <div>
+              <md-card-title-text class="carpool-card-counter-text">
+              <md-headline class="md-title">{{ info.numSeatbelts }}</md-headline>
+                <md-subhead>Seatbelts</md-subhead>
+              </md-card-title-text>
+            </div>
+            <div flex></div>
           </div>
-          <div flex></div>
-          <div>
-            <md-card-title-text class="carpool-card-counter-text">
-            <md-headline class="md-title">{{ info.numSeatbelts }}</md-headline>
-              <md-subhead>Seatbelts</md-subhead>
-            </md-card-title-text>
-          </div>
-          <div flex></div>
+          <md-progress-linear class="md-warn" md-mode="buffer" value="40" md-buffer-value="60"></md-progress-linear>
         </div>
       </md-card-title>
       <md-card-content>

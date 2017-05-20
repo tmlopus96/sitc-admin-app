@@ -1,6 +1,6 @@
 var app = angular.module('adminApp')
 
-app.controller('LogisticsController', ['$scope', '$log', '$mdToast', '$state', '$stateParams', '$q', 'getProjectSites', 'getCarpoolSites', 'getCrew', 'getTeerCars', 'getVans', 'projectSitesHaveBeenSetToday', 'setProjectSitesHaveBeenSetToday', 'logisticsInit', 'pushAttendanceRecords', 'lastAttendanceRecordPush', function($scope, $log, $mdToast, $state, $stateParams, $q, getProjectSites, getCarpoolSites, getCrew, getTeerCars, getVans, projectSitesHaveBeenSetToday, setProjectSitesHaveBeenSetToday, logisticsInit, pushAttendanceRecords, lastAttendanceRecordPush) {
+app.controller('LogisticsController', ['$scope', '$log', '$mdToast', '$state', '$stateParams', '$q', 'getProjectSites', 'getCarpoolSites', 'getCrew', 'getTeerCars', 'getVans', 'projectSitesHaveBeenSetToday', 'setProjectSitesHaveBeenSetToday', 'logisticsInit', 'pushAttendanceRecords', 'lastAttendanceRecordPush', 'initLogistics', function($scope, $log, $mdToast, $state, $stateParams, $q, getProjectSites, getCarpoolSites, getCrew, getTeerCars, getVans, projectSitesHaveBeenSetToday, setProjectSitesHaveBeenSetToday, logisticsInit, pushAttendanceRecords, lastAttendanceRecordPush, initLogistics) {
   $log.log('Hello, world! LogisticsController is running!')
 
   lastAttendanceRecordPush().then(function (responseDate) {
@@ -9,6 +9,7 @@ app.controller('LogisticsController', ['$scope', '$log', '$mdToast', '$state', '
     $log.log("$stateParams: " + dump($stateParams, 'none'))
     $log.log("forceGo: " + $state.current.data.forceGo)
     var lastProjectDate = setLastProjectDate()
+    // If forceGo is true, it means the user was already sent to the saveAttendanceRecords state and chose to proceed without saving
     if (!$state.current.data.forceGo && (lastProjectDate.getDate() != dateOfLastPush.getDate() || lastProjectDate.getMonth() != dateOfLastPush.getMonth() || lastProjectDate.getYear() != dateOfLastPush.getYear())) { // && (lastProjectDate.getDate() != dateOfLastPush.getDate() || lastProjectDate.getMonth() != lastProjectDate.getMonth())
       // delete after use
       delete $state.current.data.forceGo
@@ -86,6 +87,7 @@ app.controller('LogisticsController', ['$scope', '$log', '$mdToast', '$state', '
     // load crew
     getCrew().then(function(crew_result) {
       $scope.crew = crew_result
+      $log.log("$scope.crew: " + dump($scope.crew, 'none'))
       Object.keys($scope.crew).forEach(function(personId) {
         $scope.crew[personId].numPassengers = parseInt($scope.crew[personId].numPassengers) //not loading into number input for some reason
         if ($scope.crew[personId].isOnLogistics == '1' || $scope.crew[personId].isOnLogistics == 1) {
@@ -104,7 +106,7 @@ app.controller('LogisticsController', ['$scope', '$log', '$mdToast', '$state', '
 
         // on last iteration of forEach, resolve promise
         if (Object.keys($scope.crew).indexOf(personId) == Object.keys($scope.crew).length - 1) {
-          $log.log("Carpool Sites after Crew init: " + dump($scope.carpoolSites, 'none'))
+          // $log.log("Carpool Sites after Crew init: " + dump($scope.carpoolSites, 'none'))
           $log.log("Resolving crew promise!")
           defer.resolve()
         }
@@ -159,7 +161,20 @@ app.controller('LogisticsController', ['$scope', '$log', '$mdToast', '$state', '
     projectSitesHaveBeenSetToday().then(function(status) {
       $log.log('init status: ' + status + '; current state: ' + $state.current.name)
       if (!status) {
-        $state.go("logistics.projectSiteSelection")
+        // initLogistics: automatically add people with permanent assignements to Logistics by inserting them into CheckedIn
+        initLogistics().then(function success () {
+          $state.go("logistics.projectSiteSelection")
+        }, function failure() {
+          $mdDialog.show(
+            $mdDialog.alert()
+              .clickOutsideToClose(true)
+              .title('Something went wrong.')
+              .textContent('It\'s okay. Everything should work fine, but you might have to manually add some people to logistics who are normally added automatically.')
+              .ariaLabel('Problem, but everything is fine.')
+              .ok('Onward!')
+          )
+          $state.go("logistics.projectSiteSelection")
+        })
       }
       else {
         var forDate = setLogisticsDate()
@@ -204,9 +219,9 @@ app.controller('LogisticsController', ['$scope', '$log', '$mdToast', '$state', '
           $scope.hideTabs = false
           $scope.breadcrumbShows.assignCrew = true
         }
-        else if ($state.current.name === 'logistics.projectPanel') {
+        else if ($state.current.name === 'logistics.projectSitesPanel') {
           $log.log("Going to projectPanel!")
-          $state.go('logistics.projectPanel')
+          $state.go('logistics.projectSitesPanel')
           $scope.selectedTab = 1
           $scope.hideTabs = false
           $scope.breadcrumbShows.assignCrew = true

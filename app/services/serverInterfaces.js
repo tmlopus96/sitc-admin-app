@@ -331,3 +331,14 @@ app.factory('pushAttendanceRecords', ['$log', '$q', '$http', '$mdToast', functio
   }
 
 }])
+
+app.factory('initLogistics', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http) {
+
+  return function () {
+    return $http({
+      method: 'GET',
+      url: 'app/appServer/initLogistics.php'
+    })
+  }
+
+}])
