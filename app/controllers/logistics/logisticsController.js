@@ -64,6 +64,11 @@ app.controller('LogisticsController', ['$scope', '$log', '$mdToast', '$state', '
         $scope.projectSites[siteId]["assignedCrew"] = []
         $scope.projectSites[siteId]["assignedVans"] = []
         $scope.projectSites[siteId]["assignedTeerCars"] = []
+
+        $scope.projectSites[siteId].minTeers = parseInt($scope.projectSites[siteId].minTeers)
+        $scope.projectSites[siteId].optimalTeers = parseInt($scope.projectSites[siteId].optimalTeers)
+        $scope.projectSites[siteId].maxTeers = parseInt($scope.projectSites[siteId].maxTeers)
+
         if ($scope.projectSites[siteId].isActive == '1') {
           $scope.projectSites[siteId].isActive = 1
           $scope.activeSites.push(siteId)

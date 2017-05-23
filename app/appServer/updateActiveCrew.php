@@ -66,7 +66,7 @@
   }
 
   if ($result) {
-    echo "succes";
+    echo "success";
   } else {
     http_response_code(500);
     exit('serverFail');

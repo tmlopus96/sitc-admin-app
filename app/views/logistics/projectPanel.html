@@ -8,23 +8,26 @@
           </md-card-header-text>
         </md-card-header>
       </md-toolbar>
-      <md-card-title style="padding-top:0; padding-bottom:0" flex="20">
-        <div layout="row" flex="100" layout-margin>
-          <div flex></div>
-          <div>
-            <md-card-title-text class="project-card-counter-text">
-              <md-headline class="md-title">{{projectSites[siteId].assignedCrew.length}}</md-headline>
-              <md-subheader>Crew</md-subheader>
-            </md-card-title-text>
-          </div>
-          <div flex></div>
-          <div>
-            <md-card-title-text class="project-card-counter-text">
-              <md-headline class="md-title">##</md-headline>
-              <md-subheader>Volunteers</md-subheader>
-            </md-card-title-text>
-          </div>
-          <div flex></div>
+      <md-card-title style="padding-top:0; padding-bottom:0; padding-left:0; padding-right: 0" flex="20">
+        <div layout="column" style="width: 100%">
+          <!-- <div layout="row" flex="100" layout-margin>
+            <div flex></div>
+            <div>
+              <md-card-title-text class="project-card-counter-text">
+                <md-headline class="md-title">{{projectSites[siteId].assignedCrew.length}}</md-headline>
+                <md-subheader>Crew</md-subheader>
+              </md-card-title-text>
+            </div>
+            <div flex></div>
+            <div>
+              <md-card-title-text class="project-card-counter-text">
+                <md-headline class="md-title">{{ projectSites[siteId].numVolunteers }}</md-headline>
+                <md-subheader>Volunteers</md-subheader>
+              </md-card-title-text>
+            </div>
+            <div flex></div>
+          </div> -->
+          <sitc-seatbelt-progress num-seatbelts='projectSites[siteId].numVolunteers' num-crew='projectSites[siteId].assignedCrew.length' min-teers='projectSites[siteId].minTeers' optimal-teers='projectSites[siteId].optimalTeers' max-teers='projectSites[siteId].maxTeers'></sitc-seatbelt-progress>
         </div>
       </md-card-title>
       <md-card-content>

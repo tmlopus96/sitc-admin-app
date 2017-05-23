@@ -1,7 +1,7 @@
 <!--Material Icons Font-->
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-<div flex="65">
+<div flex="80">
 
   <div style="margin-top:10px">
     <span class="md-title" style="margin-bottom: 0; margin-top: 10px">Set up logistics for: </span>
@@ -22,7 +22,9 @@
           <th md-column align-rule="left">Name</th>
           <th md-column align-rule="left">Project</th>
           <th md-column align-rule="left">Address</th>
-          <th md-column align-rule="left">Partner Contact</th>
+          <th md-column align-rule="left">Min. ’Teers</th>
+          <th md-column align-rule="left">Optimal ’Teers</th>
+          <th md-column align-rule="left">Max. ’Teers</th>
         </tr>
       </thead>
 
@@ -38,7 +40,21 @@
             <md-icon class="sitc-icon-">{{ site.project }}</md-icon>
           </td>
           <td md-cell>{{ site.address }}</td>
-          <td md-cell>{{ site.partnerContactName }}</td>
+          <td md-cell>
+            <md-input-container>
+              <input type="number" name="minTeers" ng-model="site.minTeers" value="site.minTeers" ng-change="updateSiteCapacity(site.projectSite_id, 'minTeers')">
+            </md-input-container>
+          </td>
+          <td md-cell>
+            <md-input-container>
+              <input type="number" name="optimalTeers" ng-model="site.optimalTeers" value="site.optimalTeers" ng-change="updateSiteCapacity(site.projectSite_id, 'optimalTeers')">
+            </md-input-container>
+          </td>
+          <td md-cell>
+            <md-input-container>
+              <input type="number" name="maxTeers" ng-model="site.maxTeers" value="site.maxTeers" ng-change="updateSiteCapacity(site.projectSite_id, 'maxTeers')">
+            </md-input-container>
+          </td>
         </tr>
       </tbody>
     </table>

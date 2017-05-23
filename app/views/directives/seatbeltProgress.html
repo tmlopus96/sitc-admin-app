@@ -1,0 +1,41 @@
+<div id="seatbeltProgressContainer" layout="column" layout-align="center center" style="width: 100%">
+  <div id="seatbeltProg_Headers" layout="row" layout-align="center center" style="width: 100%">
+    <div flex="55" id="numSeatbeltsContainer" style="padding-left:26px">
+      <h2 class="seatbelt-prog-header">{{ numSeatbelts }}</h2>
+      <span class="md-subhead seatbelt-prog-subheader">Seatbelts</span>
+    </div>
+    <div flex="45" id="numCrewContainer" style="padding-left:15px">
+      <h2 class="seatbelt-prog-header">{{ numCrew }}</h2>
+      <span class="md-subhead seatbelt-prog-subheader">Crew</span>
+    </div>
+  </div>
+  <div id="seatbeltProg_BarsContainer" layout="row">
+    <div class="seatbelt-prog-bar-container" layout="column" layout-align="end">
+      <h3>{{ min }}</h3>
+      <div id="seatbeltProgBar_Min" class="seatbelt-prog-bar" style="" layout="row" layout-align="start">
+        <div id="minFillBar" class="seatbelt-prog-bar-fill">
+
+        </div>
+      </div>
+      <h4 class="md-subhead">Min</h4>
+    </div>
+    <div class="seatbelt-prog-bar-container" layout="column">
+      <h3>{{opt}}</h3>
+      <div id="seatbeltProgBar_Opt" class="seatbelt-prog-bar" style="" layout="row" layout-align="start">
+        <div id="optFillBar" class="seatbelt-prog-bar-fill">
+
+        </div>
+      </div>
+      <h4 class="md-subhead">Opt</h4>
+    </div>
+    <div class="seatbelt-prog-bar-container" layout="column">
+      <h3 style="margin-right:0 !important">{{max}}</h3>
+      <div id="seatbeltProgBar_Max" class="seatbelt-prog-bar" style="" layout="row" layout-align="start">
+        <div id="maxFillBar" class="seatbelt-prog-bar-fill">
+
+        </div>
+      </div>
+      <h4 class="md-subhead" style="margin-right:0 !important">Max</h4>
+    </div>
+  </div>
+</div> <!-- end #seatbeltProgressContainer -->

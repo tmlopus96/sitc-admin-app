@@ -88,7 +88,8 @@ md-list.carpool-panel-list md-list-item, md-list.project-panel-list md-list-item
   padding-bottom: 0 !important; }
 
 .project-panel-list {
-  padding-left: 15px; }
+  padding-left: 15px;
+  padding-top: 90px; }
 
 .md-subheader {
   background-color: transparent; }
@@ -166,6 +167,60 @@ to prevent collapsing during animation*/
 
 .logistics-toolbar-item {
   padding-right: 10px; }
+
+sitc-seatbelt-progress {
+  position: relative; }
+
+#numCrewContainer {
+  background-color: rgba(210, 210, 210, 0.97); }
+
+#seatbeltProgressContainer {
+  margin-bottom: 15px; }
+
+#seatbeltProg_Headers {
+  padding-left: 0;
+  padding-right: 0; }
+  #seatbeltProg_Headers div {
+    padding-bottom: 10px; }
+
+#seatbeltProg_BarsContainer {
+  position: relative;
+  width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-top: 15px; }
+
+.seatbelt-prog-header {
+  margin-bottom: 0; }
+
+.seatbelt-prog-subheader {
+  margin-top: 0; }
+
+.seatbelt-prog-bar-container h3, .seatbelt-prog-bar-container h4 {
+  margin-bottom: 0;
+  margin-top: 0;
+  margin-right: -7px;
+  text-align: right; }
+.seatbelt-prog-bar-container h4 {
+  margin-right: -10px; }
+
+.seatbelt-prog-bar {
+  height: 20px;
+  min-width: 20px;
+  background-color: rgba(0, 0, 0, 0.4); }
+  .seatbelt-prog-bar div {
+    height: 100%;
+    background-color: rgba(255, 110, 64, 0.87);
+    z-index: 100; }
+
+#seatbeltProgBar_Min {
+  background-color: #4dd0ff; }
+
+#seatbeltProgBar_Opt {
+  background-color: #4dd0ff; }
+
+#seatbeltProgBar_Max {
+  background-color: #4dd0ff; }
 
 @media only screen and (min-width: 768px) {
   #mainView {

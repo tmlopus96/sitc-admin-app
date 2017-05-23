@@ -4,6 +4,18 @@ app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$
 
   $scope.speedDialIsOpen = false
 
+  $scope.$on('$stateChangeSuccess', function(event, toState) {
+    var returnObj = {}
+    angular.forEach($scope.carpoolSites, function(info, id) {
+      // $log.log("Info: " + dump(info, 'none'))
+      returnObj[id+'_crew'] = info.assignedCrew.length
+      returnObj[id+'_vans'] = info.assignedVans.length
+      returnObj[id+'_teerCars'] = info.assignedTeerCars.length
+    })
+    updateNumSeatbelts(returnObj)
+
+  })
+
   $scope.$watchCollection(
     function () {
         var returnObj = {}
@@ -18,51 +30,55 @@ app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$
       // return $scope.carpoolSites['nv'].assignedTeerCars
     },
     function (newVal, oldVal) {
-      $log.log("The watch callback is running!")
-      // $log.log("newVal: " + dump(newVal, 'none') + ", oldVal: " + dump(oldVal, 'none'))
-      var sitesToUpdate = []
-      angular.forEach(newVal, function(length, id) {
-        if (length != oldVal[id]) {
-          // -- get id as substring of id_<crew/van/teerCar>
-          var index = id.indexOf('_')
-          var id_proper = id.substring(0, index)
-
-          if (sitesToUpdate.indexOf(id_proper) < 0) {
-            sitesToUpdate.push(id_proper)
-          }
-        }
-      })
-      // $log.log("sitesToUpdate: " + dump(sitesToUpdate, 'none'))
-
-      angular.forEach(sitesToUpdate, function(siteId) {
-        var numCrewSeatbelts = 0
-        var numVanSeatbelts = 0
-        var numTeerCarSeatbelts = 0
-
-        if ($scope.carpoolSites[siteId].assignedCrew) {
-          angular.forEach($scope.carpoolSites[siteId].assignedCrew, function(currentCrewId) {
-            numCrewSeatbelts += parseInt($scope.crew[currentCrewId].numSeatbelts)
-          })
-        }
-
-        if ($scope.carpoolSites[siteId].assignedVans) {
-          angular.forEach($scope.carpoolSites[siteId].assignedVans, function(currentVan) {
-            numVanSeatbelts += parseInt($scope.vans[currentVan].numSeatbelts)
-          })
-        }
-
-        if ($scope.carpoolSites[siteId].assignedTeerCars.length) {
-          angular.forEach($scope.carpoolSites[siteId].assignedTeerCars, function(currentTeerCar) {
-            // $log.log("forEach for the assignedTeerCars ran!")
-            numTeerCarSeatbelts += parseInt($scope.teerCars[currentTeerCar].assignedNumPassengers)
-          })
-        }
-
-        // $log.log("numCrewSeatbelts: " + numCrewSeatbelts + ", numVanSeatbelts: " + numVanSeatbelts + ", numTeerCarSeatbelts: " + numTeerCarSeatbelts)
-        $scope.carpoolSites[siteId].numSeatbelts = numCrewSeatbelts + numVanSeatbelts + numTeerCarSeatbelts
-      })
+      updateNumSeatbelts(newVal, oldVal)
     }
   )
+
+  function updateNumSeatbelts (newVal, oldVal) {
+    $log.log("The watch callback is running!")
+    // $log.log("newVal: " + dump(newVal, 'none') + ", oldVal: " + dump(oldVal, 'none'))
+    var sitesToUpdate = []
+    angular.forEach(newVal, function(length, id) {
+      if (!oldVal || length != oldVal[id]) {
+        // -- get id as substring of id_<crew/van/teerCar>
+        var index = id.indexOf('_')
+        var id_proper = id.substring(0, index)
+
+        if (sitesToUpdate.indexOf(id_proper) < 0) {
+          sitesToUpdate.push(id_proper)
+        }
+      }
+    })
+    // $log.log("sitesToUpdate: " + dump(sitesToUpdate, 'none'))
+
+    angular.forEach(sitesToUpdate, function(siteId) {
+      var numCrewSeatbelts = 0
+      var numVanSeatbelts = 0
+      var numTeerCarSeatbelts = 0
+
+      if ($scope.carpoolSites[siteId].assignedCrew) {
+        angular.forEach($scope.carpoolSites[siteId].assignedCrew, function(currentCrewId) {
+          numCrewSeatbelts += parseInt($scope.crew[currentCrewId].numSeatbelts)
+        })
+      }
+
+      if ($scope.carpoolSites[siteId].assignedVans) {
+        angular.forEach($scope.carpoolSites[siteId].assignedVans, function(currentVan) {
+          numVanSeatbelts += parseInt($scope.vans[currentVan].numSeatbelts)
+        })
+      }
+
+      if ($scope.carpoolSites[siteId].assignedTeerCars.length) {
+        angular.forEach($scope.carpoolSites[siteId].assignedTeerCars, function(currentTeerCar) {
+          // $log.log("forEach for the assignedTeerCars ran!")
+          numTeerCarSeatbelts += parseInt($scope.teerCars[currentTeerCar].assignedNumPassengers)
+        })
+      }
+
+      // $log.log("numCrewSeatbelts: " + numCrewSeatbelts + ", numVanSeatbelts: " + numVanSeatbelts + ", numTeerCarSeatbelts: " + numTeerCarSeatbelts)
+      $scope.carpoolSites[siteId].numSeatbelts = numCrewSeatbelts + numVanSeatbelts + numTeerCarSeatbelts
+    })
+  }
 
   $scope.addCrew = function(carpoolSite) {
     $log.log("carpoolSite, before addCrewPanelModal: " + dump($scope.carpoolSites[carpoolSite].assignedCrew, 'none'))
@@ -190,6 +206,82 @@ app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$
 
 
 app.controller('ProjectPanelController', ['$scope', '$log', '$q', '$mdToast', '$mdDialog', 'getProjectSites', 'getCrew', 'addCrewProjectPanelModal', 'addVanProjectPanelModal', 'addTeerCarProjectPanelModal', 'updateActiveCrew', 'updateVan', 'updateActiveTeerCar', function($scope, $log, $q, $mdToast, $mdDialog, getProjectSites, getCrew, addCrewProjectPanelModal, addVanProjectPanelModal, addTeerCarProjectPanelModal, updateActiveCrew, updateVan, updateActiveTeerCar) {
+
+  $scope.$on('$stateChangeSuccess', function(event, toState) {
+    var returnObj = {}
+    angular.forEach($scope.projectSites, function(info, id) {
+      // $log.log("Info: " + dump(info, 'none'))
+      returnObj[id+'_crew'] = info.assignedCrew.length
+      returnObj[id+'_vans'] = info.assignedVans.length
+      returnObj[id+'_teerCars'] = info.assignedTeerCars.length
+    })
+    updateNumSeatbelts(returnObj)
+
+  })
+
+  $scope.$watchCollection(
+    function () {
+        var returnObj = {}
+        // $log.log("The watchListener is running!")
+        angular.forEach($scope.projectSites, function(info, id) {
+          // $log.log("Info: " + dump(info, 'none'))
+          returnObj[id+'_crew'] = info.assignedCrew.length
+          returnObj[id+'_vans'] = info.assignedVans.length
+          returnObj[id+'_teerCars'] = info.assignedTeerCars.length
+        })
+        return returnObj
+      // return $scope.projectSites['nv'].assignedTeerCars
+    },
+    function (newVal, oldVal) {
+      updateNumSeatbelts(newVal, oldVal)
+    }
+  )
+
+  function updateNumSeatbelts (newVal, oldVal) {
+    $log.log("The watch callback is running!")
+    // $log.log("newVal: " + dump(newVal, 'none') + ", oldVal: " + dump(oldVal, 'none'))
+    var sitesToUpdate = []
+    angular.forEach(newVal, function(length, id) {
+      if (!oldVal || length != oldVal[id]) {
+        // -- get id as substring of id_<crew/van/teerCar>
+        var index = id.indexOf('_')
+        var id_proper = id.substring(0, index)
+
+        if (sitesToUpdate.indexOf(id_proper) < 0) {
+          sitesToUpdate.push(id_proper)
+        }
+      }
+    })
+    // $log.log("sitesToUpdate: " + dump(sitesToUpdate, 'none'))
+
+    angular.forEach(sitesToUpdate, function(siteId) {
+      var numCrewSeatbelts = 0
+      var numVanSeatbelts = 0
+      var numTeerCarSeatbelts = 0
+
+      if ($scope.projectSites[siteId].assignedCrew) {
+        angular.forEach($scope.projectSites[siteId].assignedCrew, function(currentCrewId) {
+          numCrewSeatbelts += parseInt($scope.crew[currentCrewId].numSeatbelts)
+        })
+      }
+
+      if ($scope.projectSites[siteId].assignedVans) {
+        angular.forEach($scope.projectSites[siteId].assignedVans, function(currentVan) {
+          numVanSeatbelts += parseInt($scope.vans[currentVan].numSeatbelts)
+        })
+      }
+
+      if ($scope.projectSites[siteId].assignedTeerCars.length) {
+        angular.forEach($scope.projectSites[siteId].assignedTeerCars, function(currentTeerCar) {
+          // $log.log("forEach for the assignedTeerCars ran!")
+          numTeerCarSeatbelts += parseInt($scope.teerCars[currentTeerCar].assignedNumPassengers)
+        })
+      }
+
+      // $log.log("numCrewSeatbelts: " + numCrewSeatbelts + ", numVanSeatbelts: " + numVanSeatbelts + ", numTeerCarSeatbelts: " + numTeerCarSeatbelts)
+      $scope.projectSites[siteId].numVolunteers = numCrewSeatbelts + numVanSeatbelts + numTeerCarSeatbelts
+    })
+  }
 
   $scope.addCrew = function(projectSite) {
     addCrewProjectPanelModal(projectSite, $scope.crew, $scope.carpoolSites, $scope.projectSites).then(function success (personId) {
@@ -344,7 +436,7 @@ app.controller('ProjectPanelController', ['$scope', '$log', '$q', '$mdToast', '$
 
 }])
 
-app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRipple', '$mdToast', 'getProjectSites', 'toggleSiteActive', 'addProjectSiteModal', function($scope, $log, $mdInkRipple, $mdToast, getProjectSites, toggleSiteActive, addProjectSiteModal) {
+app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRipple', '$mdToast', 'getProjectSites', 'toggleSiteActive', 'addProjectSiteModal', 'updateProjectSite', function($scope, $log, $mdInkRipple, $mdToast, getProjectSites, toggleSiteActive, addProjectSiteModal, updateProjectSite) {
 
   $scope.toggleActive = function(siteId) {
     var togglePromise = toggleSiteActive(siteId, $scope.projectSites[siteId].isActive)
@@ -360,6 +452,17 @@ app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRippl
         $mdToast.show($mdToast.simple().textContent('Failed to update database. Please try again.').highlightClass('md-warn'))
       }
     )
+  }
+
+  $scope.updateSiteCapacity = function (siteId, paramToUpdate) {
+    var params = {}
+    params[paramToUpdate] = $scope.projectSites[siteId][paramToUpdate]
+    updateProjectSite(siteId,params).then(function success (response) {
+      $log.log("updateProjectSite succeeded, with response: " + dump(response, 'none'))
+    }, function failure (response) {
+      $log.log("updateProjectSite failed, with response: " + dump(response, 'none'))
+      // add error handling
+    })
   }
 
   $scope.forDate = setLogisticsDate()

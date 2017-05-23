@@ -211,6 +211,25 @@ app.factory('toggleSiteActive', ['$log', '$q', '$http', '$mdToast', function($lo
   }
 }])
 
+app.factory('updateProjectSite', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http, $mdToast) {
+
+  return function(mySiteId, myParamsToUpdate) {
+
+    return $http({
+      url: "app/appServer/updateProjectSite.php",
+      method: 'GET',
+      params: {
+        projectSite_id: mySiteId,
+        minTeers: (myParamsToUpdate.minTeers) ? myParamsToUpdate.minTeers : null,
+        optimalTeers: (myParamsToUpdate.optimalTeers) ? myParamsToUpdate.optimalTeers : null,
+        maxTeers: (myParamsToUpdate.maxTeers) ? myParamsToUpdate.maxTeers : null
+      }
+    })
+    //TODO: handle server fail
+  }
+
+}])
+
 app.factory('updateActiveCrew', ['$log', '$q', '$http', '$mdToast', function($log, $q, $http, $mdToast) {
   return function(myPersonId, myActiveStatus, paramsToUpdate) {
 
