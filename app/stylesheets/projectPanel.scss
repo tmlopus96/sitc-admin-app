@@ -1,5 +1,10 @@
 @import 'carpoolPanel';
 
+sitc-seatbelt-progress {
+  position: relative;
+  display: block;
+}
+
 .project-card-counter-text {
   @extend .carpool-card-counter-text;
 }
@@ -7,7 +12,7 @@
 .project-panel-list {
   @extend .carpool-panel-list;
   padding-left: 15px;
-  padding-top: 90px;
+  padding-top: 10px;
 
 }
 

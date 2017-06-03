@@ -192,16 +192,6 @@ app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$
     })
   }
 
-  function hideSpeedDialButtons(){
-      var speedDialButton_first = angular.element(document.querySelectorAll('#speedDialActionButton_first')).parent()
-      var speedDialButton_second = angular.element(document.querySelectorAll('#speedDialActionButton_second')).parent()
-      var speedDialButton_third = angular.element(document.querySelectorAll('#speedDialActionButton_third')).parent()
-
-      speedDialButton_first.css({'transform':'translate(44px)', 'z-index':'-21'})
-      speedDialButton_second.css({'transform':'translate(88px)', 'z-index':'-22'})
-      speedDialButton_third.css({'transform':'translate(132px)', 'z-index':'-23'})
-    }
-
 }])
 
 

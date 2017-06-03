@@ -80,6 +80,9 @@ if ($checkedIn_result->num_rows > 0) {
     $query = "DELETE FROM CheckedIn";
     $connection->query($query);
 
+    $query = "DELETE FROM TempRegistration";
+    $connection->query($query);
+
     $query = "UPDATE CheckedIn SET isCheckedIn=0";
     $connection->query($query);
   } // end if(num_rows > 0)

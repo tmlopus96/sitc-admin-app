@@ -87,9 +87,13 @@ md-list.carpool-panel-list md-list-item, md-list.project-panel-list md-list-item
 .md-subheader-inner {
   padding-bottom: 0 !important; }
 
+sitc-seatbelt-progress {
+  position: relative;
+  display: block; }
+
 .project-panel-list {
   padding-left: 15px;
-  padding-top: 90px; }
+  padding-top: 10px; }
 
 .md-subheader {
   background-color: transparent; }
