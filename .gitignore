@@ -3,5 +3,5 @@ bower_components
 node_modules
 tools/scratch.html
 app/stylesheets/.sass-cache/
-adminAppStylesheet.css
 app/stylesheets/adminAppStylesheet.css.map
+app/appServer/sitc_workforce_creds.php
