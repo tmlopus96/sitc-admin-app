@@ -61,6 +61,12 @@ app.config(function($stateProvider) {
     //---end Logistics child states
 })
 
+//open to carpool panel by default
+app.config(function($urlRouterProvider, $locationProvider) {
+  // $locationProvider.html5Mode(true);
+  $urlRouterProvider.when('', '/logistics/carpoolPanel')
+})
+
 app.config(function($mdThemingProvider) {
   $mdThemingProvider.theme('default')
     .primaryPalette('cyan')
