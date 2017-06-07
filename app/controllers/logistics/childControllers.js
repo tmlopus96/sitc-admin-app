@@ -484,9 +484,9 @@ app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRippl
   $scope.addNew = function () {
     addProjectSiteModal().then(function success(newSite) {
       $log.log("recieved this from addProjectSiteModal: " + dump(newSite, 'none'))
-      $scope.projectSites[newSite.id] = newSite
+      $scope.projectSites[newSite.projectSite_id] = newSite
       if (newSite.isActive) {
-        $scope.activeSites.push(newSite.id)
+        $scope.activeSites.push(newSite.projectSite_id)
       }
       // $log.log("projectSites: " + dump($scope.projectSites, 'none'))
     })

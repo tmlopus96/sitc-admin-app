@@ -23,7 +23,14 @@ $dateOfService = new DateTime();
 while (date('w', $dateOfService->getTimestamp()) > 5 || date('w', $dateOfService->getTimestamp()) < 2) {
   $dateOfService->sub(new DateInterval('P1D'));
 }
-echo date('w', $dateOfService->getTimestamp());
+
+if (date('G', $dateOfService->getTimestamp() < 8)) {
+  do {
+    $dateOfService->sub(new DateInterval('P1D'));
+  } while (date('w', $dateOfService->getTimestamp()) < 2 || date('w', $dateOfService->getTimestamp()) > 5);
+}
+
+echo date('w-G', $dateOfService->getTimestamp());
 echo "Date: " . "&nbsp;";
 echo date('Y-m-d', $dateOfService->getTimestamp());
 
@@ -88,7 +95,7 @@ if ($checkedIn_result->num_rows > 0) {
   } // end if(num_rows > 0)
 
   $dateForQuery = date('Y-m-d', $dateOfService->getTimestamp());
-  $query = "UPDATE SessionVals SET lastAttendanceRecordPush='$dateForQuery'";
+  $query = "UPDATE SessionVals SET lastAttendanceRecordPush='$dateForQuery', projectSitesHaveBeenSetToday=0";
   $connection->query($query);
 
   echo $query . '\n';
