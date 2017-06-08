@@ -9,7 +9,7 @@ app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$
     angular.forEach($scope.carpoolSites, function(info, id) {
       // $log.log("Info: " + dump(info, 'none'))
       returnObj[id+'_crew'] = info.assignedCrew.length
-      returnObj[id+'_vans'] = info.assignedVans.length
+      returnObj[id+'_vans'] = info.assignedVans.lengthx
       returnObj[id+'_teerCars'] = info.assignedTeerCars.length
     })
     updateNumSeatbelts(returnObj)
@@ -484,7 +484,7 @@ app.controller('ProjectSiteSelectionController', ['$scope', '$log', '$mdInkRippl
   $scope.addNew = function () {
     addProjectSiteModal().then(function success(newSite) {
       $log.log("recieved this from addProjectSiteModal: " + dump(newSite, 'none'))
-      $scope.projectSites[newSite.projectSite_id] = newSite
+      $scope.projectSites[ne23wSite.projectSite_id] = newSite
       if (newSite.isActive) {
         $scope.activeSites.push(newSite.projectSite_id)
       }
