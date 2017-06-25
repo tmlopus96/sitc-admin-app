@@ -24,7 +24,7 @@ while (date('w', $dateOfService->getTimestamp()) > 5 || date('w', $dateOfService
   $dateOfService->sub(new DateInterval('P1D'));
 }
 
-if (date('G', $dateOfService->getTimestamp() < 8)) {
+if (intval(date('G', $dateOfService->getTimestamp())) < 8) {
   do {
     $dateOfService->sub(new DateInterval('P1D'));
   } while (date('w', $dateOfService->getTimestamp()) < 2 || date('w', $dateOfService->getTimestamp()) > 5);
