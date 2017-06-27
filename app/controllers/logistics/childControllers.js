@@ -58,7 +58,9 @@ app.controller('CarpoolPanelController', ['$scope', '$log', '$q', '$mdToast', '$
 
       if ($scope.carpoolSites[siteId].assignedCrew) {
         angular.forEach($scope.carpoolSites[siteId].assignedCrew, function(currentCrewId) {
-          numCrewSeatbelts += parseInt($scope.crew[currentCrewId].numSeatbelts)
+          if (typeof $scope.crew[currentCrewId].numSeatbelts === "number") {
+            numCrewSeatbelts += parseInt($scope.crew[currentCrewId].numSeatbelts)
+          }
         })
       }
 
