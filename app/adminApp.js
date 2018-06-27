@@ -64,7 +64,7 @@ app.config(function($stateProvider) {
 //open to carpool panel by default
 app.config(function($urlRouterProvider, $locationProvider) {
   // $locationProvider.html5Mode(true);
-  $urlRouterProvider.when('', '/logistics/carpoolPanel')
+  $urlRouterProvider.when('', '/attendanceRecords')
 })
 
 app.config(function($mdThemingProvider) {

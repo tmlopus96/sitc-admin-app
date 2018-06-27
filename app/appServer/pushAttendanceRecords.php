@@ -6,7 +6,7 @@
   if ($connection->connect_error)
     die ($connection->connect_error);
 
-  $query = "SELECT ch.person_id, ch.carpoolSite_id, ch.assignedToProject, ch.assignedToSite_id, ch.driverStatus, ch.assignedToDriver_id, ch.isCheckedIn, p.isCrew FROM CheckedIn ch, Person p WHERE ch.person_id=p.person_id AND ch.isCheckedIn=1";
+  $query = "SELECT ch.person_id, ch.carpoolSite_id, ch.isDriver, ch.isCheckedIn, p.isCrew FROM CheckedIn ch, Person p WHERE ch.person_id=p.person_id AND ch.isCheckedIn=1";
   echo $query . '\n';
   $checkedIn_result = $connection->query($query);
 
@@ -48,11 +48,8 @@ if ($checkedIn_result->num_rows > 0) {
       $row[0] = "'" . date('Y-m-d', $dateOfService->getTimestamp()) . "'";
       $row[1] = $currentPerson['person_id'];
       $row[2] = "'" . $currentPerson['carpoolSite_id'] . "'";
-      $row[3] = "'" . $currentPerson['assignedToProject'] . "'";
-      $row[4] = "'" . $currentPerson['assignedToSite_id'] . "'";
-      $row[5] = ($currentPerson['driverStatus'] == 'isDriver') ? 1 : 0;
-      $row[6] = ($currentPerson['assignedToDriver_id']) ? $currentPerson['assignedToDriver_id'] : 0;
-      $row[7] = ($currentPerson['isCrew'] || $currentPerson['driverStatus'] == 1) ? 5 : 4;
+      $row[3] = $currentPerson['isDriver'];
+      $row[4] = ($currentPerson['isCrew'] || $currentPerson['isDriver'] == 1) ? 5 : 4;
 
       $rowString = implode(', ', $row);
       echo "Imploded row: ";
@@ -69,14 +66,11 @@ if ($checkedIn_result->num_rows > 0) {
       [0] dateOfService
       [1] person_id
       [2] carpoolSite_id
-      [3] assignedToProject
-      [4] assignedToSite_id
-      [5] wasDriver
-      [6] assignedToDriver_id
-      [7] numHoursToCredit
+      [3] wasDriver
+      [4] numHoursToCredit
     ***/
 
-    $query = "INSERT INTO AttendanceRecord (dateOfService, person_id, carpoolSite_id, assignedToProject, assignedToSite_id, wasDriver, assignedToDriver_id, numHoursToCredit) VALUES $rowsString";
+    $query = "INSERT INTO AttendanceRecord (dateOfService, person_id, carpoolSite_id, wasDriver, numHoursToCredit) VALUES $rowsString";
     echo $query;
     $attendanceRecords_result = $connection->query($query);
 
